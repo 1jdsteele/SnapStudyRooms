@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 //jake's random comment for commit
+//audrey was here
 
 export default function ChatMessageItem({ message, isOwnMessage, showHeader }) {
   const containerStyle = [
