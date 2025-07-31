@@ -6,12 +6,15 @@ import { GiftedChat } from "react-native-gifted-chat";
 import { useAuthentication } from "../utils/hooks/useAuthentication";
 import { useRealtimeChat } from "../hooks/use-realtime-chat";
 import { useChatScroll } from "../hooks/use-chat-scroll";
+import { Timer } from "../components/Timer"; 
 
 
 export default function GroupChatScreen({ route, navigation }) {
     const { user } = useAuthentication();
     const username = user?.email || 'Guest';
     //const isSender = item.user_email === username;
+    // const [test, setTest] = React.useState(false)
+    
 
   
 
@@ -38,6 +41,10 @@ export default function GroupChatScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Group Chat</Text>
+      
+      <Timer></Timer>
+      
+  
       <FlatList
         ref = {containerRef}
         data={messages}
