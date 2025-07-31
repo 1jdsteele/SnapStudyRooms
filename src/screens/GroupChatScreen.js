@@ -42,7 +42,7 @@ export default function GroupChatScreen({ route, navigation }) {
     <View style={styles.container}>
       <Text style={styles.header}>Group Chat</Text>
       
-      <Timer></Timer>
+      <Timer> </Timer>
       
   
       <FlatList

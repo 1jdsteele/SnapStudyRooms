@@ -3,9 +3,10 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import Constants from 'expo-constants';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
-export async function Timer() {
+export function Timer() {
   const [isPlaying, setIsPlaying] = React.useState(false)
   const [start, setStart] = React.useState(true);
+  const [resume, setResume] = React.useState(false);
 
   return (
     <View style={styles.container}>
@@ -25,10 +26,27 @@ export async function Timer() {
       )}
       </CountdownCircleTimer>
 
+    {start &&
+        <Button title="Start Session" onPress={() => {
+            setIsPlaying(prev => !prev);
+            setStart(false);
+            setResume(true);
+        }} />
+    }
 
-    <Button title="Start Session" onPress={() => setIsPlaying(prev => !prev) && setStart(false)} />
-        
+    {resume &&
+        <Button title="Pause" onPress={() => {
+            setIsPlaying(prev => !prev);
+            setResume(false);
+        }} />
+    }
 
+    {!resume && !start && 
+        <Button title="Resume" onPress={() => {
+            setIsPlaying(prev => !prev);
+            setResume(true);
+        }} />
+    }
   </View>
   )
 }
