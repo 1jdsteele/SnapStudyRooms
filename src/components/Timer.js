@@ -1,63 +1,69 @@
-import * as React from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import Constants from 'expo-constants';
-import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import * as React from "react";
+import { Text, View, StyleSheet, Button } from "react-native";
+import Constants from "expo-constants";
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
 export function Timer() {
-  const [isPlaying, setIsPlaying] = React.useState(false)
+  const [isPlaying, setIsPlaying] = React.useState(true);
   const [start, setStart] = React.useState(true);
   const [resume, setResume] = React.useState(false);
 
   return (
     <View style={styles.container}>
-        
       <CountdownCircleTimer
         isPlaying={isPlaying}
         duration={10}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[10, 6, 3, 0]}
-        onComplete={() => ({ shouldRepeat: false})}
+        onComplete={() => ({ shouldRepeat: false })}
         updateInterval={1}
-    >
-      {({ remainingTime, color }) => (
-        <Text style={{ color, fontSize: 40 }}>
-          {remainingTime}
-        </Text>
-      )}
+      >
+        {({ remainingTime, color }) => (
+          <Text style={{ color, fontSize: 40 }}>{remainingTime}</Text>
+        )}
       </CountdownCircleTimer>
 
-    {start &&
-        <Button title="Start Session" onPress={() => {
-            setIsPlaying(prev => !prev);
+      {start && (
+        <Button
+          title="Start Session"
+          onPress={() => {
+            setIsPlaying((prev) => !prev);
             setStart(false);
             setResume(true);
-        }} />
-    }
+          }}
+        />
+      )}
 
-    {resume &&
-        <Button title="Pause" onPress={() => {
-            setIsPlaying(prev => !prev);
+      {resume && (
+        <Button
+          title="Pause"
+          onPress={() => {
+            setIsPlaying((prev) => !prev);
             setResume(false);
-        }} />
-    }
+          }}
+        />
+      )}
 
-    {!resume && !start && 
-        <Button title="Resume" onPress={() => {
-            setIsPlaying(prev => !prev);
+      {!resume && !start && (
+        <Button
+          title="Resume"
+          onPress={() => {
+            setIsPlaying((prev) => !prev);
             setResume(true);
-        }} />
-    }
-  </View>
-  )
+          }}
+        />
+      )}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: "#ecf0f1",
     padding: 8,
-  }
+  },
 });

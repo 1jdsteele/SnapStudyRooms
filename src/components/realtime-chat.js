@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -8,13 +8,18 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
-import { ChatMessageItem } from './ChatMessageItem'; // adjust path as needed
-import { useChatScroll } from '../hooks/use-chat-scroll'; // custom hook
-import { useRealtimeChat } from '../hooks/use-realtime-chat'; // custom hook
-import { Send } from 'lucide-react-native'; // or use any icon library you prefer
+} from "react-native";
+import { ChatMessageItem } from "./ChatMessageItem"; // adjust path as needed
+import { useChatScroll } from "../hooks/use-chat-scroll"; // custom hook
+import { useRealtimeChat } from "../hooks/use-realtime-chat"; // custom hook
+import { Send } from "lucide-react-native"; // or use any icon library you prefer
 
-export default function RealtimeChat({ roomName, username, onMessage, messages: initialMessages = [] }) {
+export default function RealtimeChat({
+  roomName,
+  username,
+  onMessage,
+  messages: initialMessages = [],
+}) {
   const { containerRef, scrollToBottom } = useChatScroll(); // You may need to adjust this for RN
   const {
     messages: realtimeMessages,
@@ -25,15 +30,18 @@ export default function RealtimeChat({ roomName, username, onMessage, messages: 
     username,
   });
 
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
 
   const allMessages = useMemo(() => {
     const mergedMessages = [...initialMessages, ...realtimeMessages];
     const uniqueMessages = mergedMessages.filter(
-      (message, index, self) => index === self.findIndex((m) => m.id === message.id)
+      (message, index, self) =>
+        index === self.findIndex((m) => m.id === message.id)
     );
-    return uniqueMessages.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-  }, [initialMessages, realtimeMessages]);
+    return uniqueMessages.sort((a, b) =>
+      a.createdAt.localeCompare(b.createdAt)
+    );
+  }, [initialMessages, realtimeMessages]); //puts messages in temporal order??? JS
 
   useEffect(() => {
     if (onMessage) {
@@ -49,12 +57,12 @@ export default function RealtimeChat({ roomName, username, onMessage, messages: 
     if (!newMessage.trim() || !isConnected) return;
 
     sendMessage(newMessage);
-    setNewMessage('');
+    setNewMessage("");
   }, [newMessage, isConnected, sendMessage]);
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.wrapper}
       keyboardVerticalOffset={80}
     >
@@ -65,12 +73,15 @@ export default function RealtimeChat({ roomName, username, onMessage, messages: 
           onContentSizeChange={() => scrollToBottom?.()}
         >
           {allMessages.length === 0 ? (
-            <Text style={styles.emptyText}>No messages yet. Start the conversation!</Text>
+            <Text style={styles.emptyText}>
+              No messages yet. Start the conversation!
+            </Text>
           ) : null}
 
           {allMessages.map((message, index) => {
             const prevMessage = index > 0 ? allMessages[index - 1] : null;
-            const showHeader = !prevMessage || prevMessage.user.name !== message.user.name;
+            const showHeader =
+              !prevMessage || prevMessage.user.name !== message.user.name;
 
             return (
               <View key={message.id} style={styles.messageWrapper}>
@@ -88,7 +99,9 @@ export default function RealtimeChat({ roomName, username, onMessage, messages: 
           <TextInput
             style={[
               styles.input,
-              isConnected && newMessage.trim() ? styles.inputShrunk : styles.inputFull,
+              isConnected && newMessage.trim()
+                ? styles.inputShrunk
+                : styles.inputFull,
             ]}
             placeholder="Type a message..."
             placeholderTextColor="#999"
@@ -117,15 +130,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff', // replace with theme.bg if you have a theme
+    backgroundColor: "#fff", // replace with theme.bg if you have a theme
   },
   messageList: {
     padding: 16,
   },
   emptyText: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 14,
-    color: '#888',
+    color: "#888",
     marginTop: 12,
   },
   messageWrapper: {
@@ -133,21 +146,21 @@ const styles = StyleSheet.create({
     // Add animation if you want using Reanimated or LayoutAnimation
   },
   inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 12,
     borderTopWidth: 1,
-    borderColor: '#ddd',
-    backgroundColor: '#fff',
+    borderColor: "#ddd",
+    backgroundColor: "#fff",
     gap: 8,
   },
   input: {
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     fontSize: 14,
-    color: '#000',
+    color: "#000",
     flexGrow: 1,
   },
   inputFull: {
@@ -161,8 +174,8 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#007aff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#007aff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
