@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
 export function Timer() {
-  const [isPlaying, setIsPlaying] = React.useState(true);
+  const [isPlaying, setIsPlaying] = React.useState(false);
   const [start, setStart] = React.useState(true);
   const [resume, setResume] = React.useState(false);
   const [showModal, setShowModal] = React.useState(false);
@@ -33,7 +33,7 @@ export function Timer() {
         <Button
           title="Start Session"
           onPress={() => {
-            setIsPlaying((prev) => !prev);
+            setIsPlaying(true);
             setStart(false);
             setResume(true);
           }}
@@ -44,7 +44,7 @@ export function Timer() {
         <Button
           title="Pause"
           onPress={() => {
-            setIsPlaying((prev) => !prev);
+            setIsPlaying(false);
             setResume(false);
           }}
         />
@@ -54,7 +54,7 @@ export function Timer() {
         <Button
           title="Resume"
           onPress={() => {
-            setIsPlaying((prev) => !prev);
+            setIsPlaying(true);
             setResume(true);
           }}
         />
@@ -79,6 +79,7 @@ export function Timer() {
               onPress={() => setShowModal(false)}
             />
             <Button title="Try a lens!" onPress={() => setShowModal(false)} />
+            <Button title="Go back" onPress={() => setShowModal(false)} />
           </View>
         </View>
       </Modal>
@@ -87,14 +88,33 @@ export function Timer() {
 }
 
 const styles = StyleSheet.create({
+  //this don't work
+  // container: {
+  //   flex: 1,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   paddingTop: Constants.statusBarHeight,
+  //   backgroundColor: "#ecf0f1",
+  //   padding: 8,
+  // },
+
+  //this works, version 1
+  // container: {
+  //   flexGrow: 1,
+  //   alignItems: "center",
+  //   paddingTop: Constants.statusBarHeight,
+  //   backgroundColor: "#ecf0f1",
+  //   padding: 8,
+  // },
+
+  //this works version 2
   container: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     paddingTop: Constants.statusBarHeight,
     backgroundColor: "#ecf0f1",
     padding: 8,
   },
+
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
