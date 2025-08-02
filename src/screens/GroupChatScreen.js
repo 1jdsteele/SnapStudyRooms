@@ -42,7 +42,9 @@ export default function GroupChatScreen({ route, navigation }) {
     <View style={styles.container}>
       <Text style={styles.header}>Group Chat</Text>
       
-      <Timer> </Timer>
+      <Timer>
+        {/* You can pass a duration prop to Timer if needed */}
+      </Timer>
       
   
       <FlatList
