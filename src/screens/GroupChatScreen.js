@@ -1,36 +1,40 @@
 import { React, useState, useEffect, useCallback } from "react";
 import { StatusBar } from "expo-status-bar";
-import { View, Text, FlatList, TextInput, Button, StyleSheet, Platform, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TextInput,
+  Button,
+  StyleSheet,
+  Platform,
+  SafeAreaView,
+} from "react-native";
 import { supabase } from "../utils/hooks/supabase";
 import { GiftedChat } from "react-native-gifted-chat";
 import { useAuthentication } from "../utils/hooks/useAuthentication";
 import { useRealtimeChat } from "../hooks/use-realtime-chat";
 import { useChatScroll } from "../hooks/use-chat-scroll";
-import { Timer } from "../components/Timer"; 
-
+import { Timer } from "../components/Timer";
 
 export default function GroupChatScreen({ route, navigation }) {
-    const { user } = useAuthentication();
-    const username = user?.email || 'Guest';
-    //const isSender = item.user_email === username;
-    // const [test, setTest] = React.useState(false)
-    
+  const { user } = useAuthentication();
+  const username = user?.email || "Guest";
+  //const isSender = item.user_email === username;
+  // const [test, setTest] = React.useState(false)
 
-  
+  const { messages, sendMessage, isConnected } = useRealtimeChat({
+    roomName: "global_room",
+    username,
+  });
 
-    const { messages, sendMessage, isConnected} = useRealtimeChat({
-        roomName: 'global_room',
-        username
-         
-    });
+  const [input, setInput] = useState("");
+  const { containerRef, scrollToBottom } = useChatScroll();
 
-    const [input, setInput] = useState('');
-    const { containerRef, scrollToBottom } = useChatScroll();
-
-    const handleSend = () => {
-    if (input.trim() !== '') {
+  const handleSend = () => {
+    if (input.trim() !== "") {
       sendMessage(input.trim());
-      setInput('');
+      setInput("");
     }
   };
 
@@ -41,34 +45,37 @@ export default function GroupChatScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Group Chat</Text>
-      
-      <Timer> </Timer>
-      
-  
+
+      <Timer navigation={navigation}> </Timer>
+
       <FlatList
-        ref = {containerRef}
+        ref={containerRef}
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
-          
-          const messageUser = item.user?.name.split("@")[0] || item.user_email.split("@")[0]|| 'Unknown';
+          const messageUser =
+            item.user?.name.split("@")[0] ||
+            item.user_email.split("@")[0] ||
+            "Unknown";
           const isSender = messageUser === username.split("@")[0];
-          
-          return(
-          <Text style={[styles.message, isSender?styles.senderText : styles.otherText]}>
-            <Text style={styles.username}>{messageUser} </Text>
-             {'\n'}
-            {/* { item.user?.name.split("@")[0] || item.user_email.split("@")[0] || 'Unknown'}:{" "}:  */}
-            <Text style={styles.message}>{item.content}</Text>
-            
-          </Text>
 
+          return (
+            <Text
+              style={[
+                styles.message,
+                isSender ? styles.senderText : styles.otherText,
+              ]}
+            >
+              <Text style={styles.username}>{messageUser} </Text>
+              {"\n"}
+              {/* { item.user?.name.split("@")[0] || item.user_email.split("@")[0] || 'Unknown'}:{" "}:  */}
+              <Text style={styles.message}>{item.content}</Text>
+            </Text>
           );
         }}
         onContentSizeChange={scrollToBottom}
-
       />
-      
+
       <View style={styles.inputContainer}>
         <TextInput
           value={input}
@@ -84,29 +91,28 @@ export default function GroupChatScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
-  header: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
-  message: { paddingVertical: 4, fontSize: 16},
-  username: { fontWeight: 'bold' },
+  header: { fontSize: 20, fontWeight: "bold", marginBottom: 8 },
+  message: { paddingVertical: 4, fontSize: 16 },
+  username: { fontWeight: "bold" },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 8,
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 8,
     padding: 8,
     marginRight: 8,
   },
   senderText: {
-    color: 'darkred'
+    color: "darkred",
   },
   otherText: {
-    color: 'black'
+    color: "black",
   },
-
 });
 
 //   useEffect(() => {
