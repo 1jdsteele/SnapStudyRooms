@@ -5,10 +5,10 @@ export default function EducationalGameScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>This is the Educational Game Screen</Text>
-      <Button
+      {/* <Button
         title="Back to Chat"
         onPress={() => navigation.navigate("GroupChat")}
-      />
+      /> */}
     </View>
   );
 }

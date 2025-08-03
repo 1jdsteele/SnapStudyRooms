@@ -23,8 +23,17 @@ export default function GroupChatScreen({ route, navigation }) {
   //const isSender = item.user_email === username;
   // const [test, setTest] = React.useState(false)
 
-  const { messages, sendMessage, isConnected } = useRealtimeChat({
-    roomName: "global_room",
+  //changes for multiple study rooms
+  // const { messages, sendMessage, isConnected } = useRealtimeChat({
+  //   roomName: "global_room",
+  //   username,
+  // });
+
+  // const roomName = route.params.roomName; // passed in from navigation
+  const roomName = route?.params?.roomName ?? "global_room"; // or null with an error
+
+  const { messages, sendMessage } = useRealtimeChat({
+    roomName,
     username,
   });
 
