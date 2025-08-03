@@ -13,17 +13,24 @@ export function Timer() {
         
       <CountdownCircleTimer
         isPlaying={isPlaying}
-        duration={10}
+        duration={10 * 60}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[10, 6, 3, 0]}
         onComplete={() => ({ shouldRepeat: false})}
         updateInterval={1}
-    >
-      {({ remainingTime, color }) => (
-        <Text style={{ color, fontSize: 40 }}>
-          {remainingTime}
-        </Text>
-      )}
+      >
+
+      {({remainingTime, color}) => {
+        const minutes = Math.floor(remainingTime / 60)
+        const seconds = remainingTime % 60
+        const newTime = `${minutes}:${seconds}`
+
+        return (
+          <Text style={{ color, fontSize: 40 }}>
+            {newTime}
+          </Text>
+        )
+      }}
       </CountdownCircleTimer>
 
     {start &&

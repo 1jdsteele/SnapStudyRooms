@@ -46,7 +46,6 @@ export default function GroupChatScreen({ route, navigation }) {
         {/* You can pass a duration prop to Timer if needed */}
       </Timer>
       
-  
       <FlatList
         ref = {containerRef}
         data={messages}
