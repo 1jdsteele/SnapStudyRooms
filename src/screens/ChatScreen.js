@@ -7,21 +7,29 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { supabase } from "../utils/hooks/supabase"; // Import Supabase client
 
 import Header from "../components/Header";
-import { CHATBOTS } from "./ConversationScreen";
+// import { CHATBOTS } from "./ConversationScreen";
+
+import { useAuthentication } from "../utils/hooks/useAuthentication";
+
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
+//
 
 export default function ChatScreen({ navigation }) {
   const [chats, setChats] = useState([]);
   const insets = useSafeAreaInsets();
   const tabBarHeight = useBottomTabBarHeight();
 
-  function getChatbots() {
-    let chatbotsTemp = [];
-    for (const botId in CHATBOTS) {
-      chatbotsTemp.push({ isChatbot: true, chatId: botId });
-    }
+  const { user } = useAuthentication();
 
-    setChats((otherChats) => [...otherChats, ...chatbotsTemp]);
-  }
+  // function getChatbots() {
+  //   let chatbotsTemp = [];
+  //   for (const botId in CHATBOTS) {
+  //     chatbotsTemp.push({ isChatbot: true, chatId: botId });
+  //   }
+
+  //   setChats((otherChats) => [...otherChats, ...chatbotsTemp]);
+  // }
 
   // async function getUserChats() {
   //   // Fetch user chats from Supabase
@@ -46,12 +54,53 @@ export default function ChatScreen({ navigation }) {
   //   setChats((otherChats) => [...otherChats, ...userChatsTemp]);
   // }
 
-  useEffect(() => {
-    if (chats.length < 1) {
-      getChatbots();
-      // getUserChats();
+  async function getUserGroupChats() {
+    if (!user?.email) return;
+
+    const { data, error } = await supabase
+      .from("room_participants")
+      // .select("chat_rooms(name)")
+      .select("room_id, chat_rooms(name)")
+      .eq("user_email", user.email);
+
+    if (error) {
+      console.error("Error fetching group chats:", error);
+      return;
     }
-  }, [chats.length]);
+
+    // Extract room names
+    // const groupChats = data.map((entry) => ({
+    //   isChatbot: false,
+    //   chatId: entry.chat_rooms.name, // Use name as ID
+    // }));
+
+    console.log("FETCHED GROUP CHATS:", data);
+
+    const groupChats = data
+      .filter((entry) => entry.chat_rooms !== null) // filter out any that failed to join
+      .map((entry) => ({
+        isChatbot: false,
+        chatId: entry.chat_rooms.name,
+      }));
+
+    // setChats((otherChats) => [...otherChats, ...groupChats]);
+    setChats(groupChats);
+  }
+
+  // useEffect(() => {
+  //   // if (chats.length < 1) {
+  //   // getChatbots();
+  //   // getUserChats();
+  //   getUserGroupChats();
+  //   // }
+  //   // }, [chats.length]); //MAYBE in the future I do something like this but only if realtime doesn't do it on supabase
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getUserGroupChats();
+    }, [user?.email]) // re-run if user.email changes
+  );
 
   return (
     <View
@@ -66,17 +115,29 @@ export default function ChatScreen({ navigation }) {
         },
       ]}
     >
-      <Header title="Chat" />
+      <Header title="Chats" />
       <View>
         {chats?.map((chat) => {
           return (
             <TouchableOpacity
               style={styles.userButton}
+              // onPress={() => {
+              //   navigation.navigate("Conversation", {
+              //     isChatbot: chat.isChatbot,
+              //     chatId: chat.chatId,
+              //   });
+              // }}
               onPress={() => {
-                navigation.navigate("Conversation", {
-                  isChatbot: chat.isChatbot,
-                  chatId: chat.chatId,
-                });
+                if (chat.isChatbot) {
+                  navigation.navigate("Conversation", {
+                    isChatbot: true,
+                    chatId: chat.chatId,
+                  });
+                } else {
+                  navigation.navigate("GroupChat", {
+                    roomName: chat.chatId,
+                  });
+                }
               }}
               key={chat.chatId}
             >
@@ -96,7 +157,7 @@ export default function ChatScreen({ navigation }) {
             </TouchableOpacity>
           );
         })}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[styles.userButton, {}]}
           onPress={() =>
             navigation.navigate("GroupChat", { roomName: "global_room" })
@@ -129,7 +190,7 @@ export default function ChatScreen({ navigation }) {
           <Text style={[styles.userName, { color: "black" }]}>
             CS Study Group
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
