@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Button, Modal } from "react-native";
 import Constants from "expo-constants";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 
-export function Timer() {
+export function Timer({ navigation }) {
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [start, setStart] = React.useState(true);
   const [resume, setResume] = React.useState(false);
@@ -74,11 +74,23 @@ export function Timer() {
               To complete your streak for the day, choose one of the options
               below:
             </Text>
+
             <Button
               title="Watch a video!"
-              onPress={() => setShowModal(false)}
+              onPress={() => {
+                setShowModal(false);
+                navigation.navigate("EducationalVideo");
+              }}
             />
-            <Button title="Try a lens!" onPress={() => setShowModal(false)} />
+
+            <Button
+              title="Play a game!"
+              onPress={() => {
+                setShowModal(false);
+                navigation.navigate("EducationalGame");
+              }}
+            />
+
             <Button title="Go back" onPress={() => setShowModal(false)} />
           </View>
         </View>
