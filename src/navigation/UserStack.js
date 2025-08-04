@@ -16,7 +16,6 @@ import ChatScreen from "../screens/ChatScreen";
 
 import EducationalGameScreen from "../screens/EducationalGameScreen";
 import EducationalVideoScreen from "../screens/EducationalVideoScreen";
-import StartNewStudyRoomScreen from "../screens/StartNewStudyRoomScreen";
 
 const Stack = createStackNavigator();
 
@@ -90,12 +89,6 @@ export default function App() {
         <Stack.Screen
           name="EducationalGame"
           component={EducationalGameScreen}
-          options={{ headerShown: true }}
-        />
-
-        <Stack.Screen
-          name="NewStudyRoom"
-          component={StartNewStudyRoomScreen}
           options={{ headerShown: true }}
         />
       </Stack.Navigator>

@@ -7,7 +7,7 @@ export default function EducationalGameScreen({ navigation }) {
       <Text style={styles.text}>This is the Educational Game Screen</Text>
       <Button
         title="Back to Chat"
-        onPress={() => navigation.navigate("UserTab")}
+        onPress={() => navigation.navigate("UserTab", { screen: "Chat" })}
       />
     </View>
   );

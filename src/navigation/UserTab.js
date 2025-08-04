@@ -83,6 +83,12 @@ export default function UserStack({ route, navigation }) {
         component={SpotlightScreen}
         options={screenOptions}
       />
+
+      <Tab.Screen
+        name="EducationGame"
+        component={EducationalGameScreen}
+        options={{ ...screenOptions, headerShown: false }}
+      ></Tab.Screen>
     </Tab.Navigator>
   );
 }

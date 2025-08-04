@@ -5,10 +5,10 @@ export default function EducationalVideoScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>This is the Educational Video Screen</Text>
-      {/* <Button
+      <Button
         title="Back to Chat"
-        onPress={() => navigation.navigate("GroupChat")}
-      /> */}
+        onPress={() => navigation.navigate("UserTab", { screen: "Chat" })}
+      />
     </View>
   );
 }
