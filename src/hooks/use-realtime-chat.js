@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '../utils/hooks/supabase';
+import { useCallback, useEffect, useState } from "react";
+import { supabase } from "../utils/hooks/supabase";
 
-const MESSAGES_TABLE = 'test_messages';
+const MESSAGES_TABLE = "test_messages";
 
 export function useRealtimeChat({ roomName, username }) {
   const [messages, setMessages] = useState([]);
@@ -11,12 +11,12 @@ export function useRealtimeChat({ roomName, username }) {
     const fetchMessages = async () => {
       const { data, error } = await supabase
         .from(MESSAGES_TABLE)
-        .select('*')
-        .eq('room', roomName)
-        .order('created_at', { ascending: true });
+        .select("*")
+        .eq("room", roomName)
+        .order("created_at", { ascending: true });
 
       if (error) {
-        console.error('Error loading messages:', error);
+        console.error("Error loading messages:", error);
       } else {
         setMessages(data);
       }
@@ -27,18 +27,34 @@ export function useRealtimeChat({ roomName, username }) {
 
   // 2. Subscribe to new INSERT events for this room
   useEffect(() => {
+    // const channel = supabase
+    //   .channel(`room-${roomName}`)
+    //   .on(
+    //     'postgres_changes',
+    //     {
+    //       event: 'INSERT',
+    //       schema: 'public',
+    //       table: MESSAGES_TABLE,
+    //       filter: `room=eq.${roomName}`,
+    //     },
+    //     (payload) => {
+    //       setMessages((current) => [...current, payload.new]);
+    //     }
+    //   )
+    //   .subscribe();
     const channel = supabase
       .channel(`room-${roomName}`)
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: 'INSERT',
-          schema: 'public',
+          event: "INSERT",
+          schema: "public",
           table: MESSAGES_TABLE,
-          filter: `room=eq.${roomName}`,
         },
         (payload) => {
-          setMessages((current) => [...current, payload.new]);
+          if (payload.new.room === roomName) {
+            setMessages((current) => [...current, payload.new]);
+          }
         }
       )
       .subscribe();
@@ -58,7 +74,7 @@ export function useRealtimeChat({ roomName, username }) {
       });
 
       if (error) {
-        console.error('Send message error:', error);
+        console.error("Send message error:", error);
       }
     },
     [roomName, username]

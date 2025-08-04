@@ -13,6 +13,10 @@ import MemoryScreen from "../screens/MemoryScreen";
 import EventScreen from "../screens/EventScreen"; //New component by Sona and Christian
 import GroupChatScreen from "../screens/GroupChatScreen";
 
+import EducationalGameScreen from "../screens/EducationalGameScreen";
+import EducationalVideoScreen from "../screens/EducationalVideoScreen";
+import StartNewStudyRoomScreen from "../screens/StartNewStudyRoomScreen";
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -74,9 +78,24 @@ export default function App() {
           name="GroupChat"
           component={GroupChatScreen}
           options={{ headerShown: true }}
-         />
+        />
+
+        <Stack.Screen
+          name="EducationalVideo"
+          component={EducationalVideoScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="EducationalGame"
+          component={EducationalGameScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="NewStudyRoom"
+          component={StartNewStudyRoomScreen}
+          options={{ headerShown: true }}
+        />
       </Stack.Navigator>
-      
     </NavigationContainer>
   );
 }

@@ -2,21 +2,27 @@ import React, { useState } from "react";
 import { BottomSheet, Button, ListItem } from "@rn-vui/themed";
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useNavigation} from '@react-navigation/native';
-
+import { useNavigation } from "@react-navigation/native";
 
 const SelectionMenu = ({ showMenu, setShowMenu }) => {
   // const [isVisible, setIsVisible] = useState(false);
   const navigation = useNavigation();
   const list = [
     {
+      title: "New Study Room",
+      onPress: () => {
+        navigation.navigate("NewStudyRoom");
+        setShowMenu(false);
+      },
+    },
+    {
       title: "New Chat",
       onPress: () => {
         navigation.navigate("Conversation");
         setShowMenu(false);
-
       },
     },
+
     { title: "New Shortcut" },
     { title: "Manage Chats" },
     { title: "Manage Friendships" },
@@ -27,11 +33,9 @@ const SelectionMenu = ({ showMenu, setShowMenu }) => {
       titleStyle: { color: "white" },
       onPress: () => setShowMenu(false),
     },
-
-    
   ];
   //console.log("showmenu", showMenu);
-  
+
   // if (showMenu) {
   return (
     // <SafeAreaProvider>

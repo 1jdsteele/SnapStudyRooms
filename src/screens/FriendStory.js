@@ -9,10 +9,9 @@ export default function FriendStory() {
         }}
         style={{ width: 800, height: 800 }}
       />
-      {/* <Text 
-        styles={{justifyContents:"center"}}>
+      <Text styles={{ justifyContents: "center" }}>
         This would be your friends story!!!
-    </Text> */}
+      </Text>
     </View>
   );
 }
