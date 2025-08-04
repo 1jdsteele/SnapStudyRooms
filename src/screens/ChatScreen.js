@@ -7,6 +7,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { supabase } from "../utils/hooks/supabase"; // Import Supabase client
 import Header from "../components/Header";
 // import { CHATBOTS } from "./ConversationScreen";
+//
 
 import { useAuthentication } from "../utils/hooks/useAuthentication";
 
@@ -20,7 +21,6 @@ export default function ChatScreen({ navigation }) {
   const tabBarHeight = useBottomTabBarHeight();
 
   const { user } = useAuthentication();
-
 
   async function getUserGroupChats() {
     if (!user?.email) return;
