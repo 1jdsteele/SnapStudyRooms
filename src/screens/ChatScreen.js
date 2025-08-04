@@ -102,6 +102,32 @@ export default function ChatScreen({ navigation }) {
     }, [user?.email]) // re-run if user.email changes
   );
 
+  //this useEffect specifically to load newly created chats
+  useEffect(() => {
+    if (!user?.email) return;
+
+    const channel = supabase
+      .channel("room_participants_updates")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "room_participants",
+          filter: `user_email=eq.${user.email}`, // Only updates relevant to this user
+        },
+        (payload) => {
+          console.log("📡 Real-time update for new room:", payload);
+          getUserGroupChats();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.email]);
+
   return (
     <View
       style={[
