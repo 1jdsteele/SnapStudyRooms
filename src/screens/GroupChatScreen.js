@@ -7,17 +7,14 @@ import { useAuthentication } from "../utils/hooks/useAuthentication";
 import { useRealtimeChat } from "../hooks/use-realtime-chat";
 import { useChatScroll } from "../hooks/use-chat-scroll";
 import { Timer } from "../components/Timer"; 
-
+import Modal from 'react-native-modal';
 
 export default function GroupChatScreen({ route, navigation }) {
     const { user } = useAuthentication();
     const username = user?.email || 'Guest';
     //const isSender = item.user_email === username;
     // const [test, setTest] = React.useState(false)
-    
-
-  
-
+ 
     const { messages, sendMessage, isConnected} = useRealtimeChat({
         roomName: 'global_room',
         username
@@ -38,13 +35,37 @@ export default function GroupChatScreen({ route, navigation }) {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
+  const [isModalVisible, setModalVisible] = useState(true);
+  const [number, onChangeNumber] = useState(0);
+  const [studyTime, setStudyTime] = useState(0);
+
   return (
+
     <View style={styles.container}>
+      <Timer duration={studyTime}></Timer>
+      <View style={{flex: 1}}>
+        <Modal isVisible={isModalVisible}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>How much time do you want to study?</Text>
+              <TextInput
+                style={styles.timerInput}
+                onChangeText={onChangeNumber}
+                value={number}
+                keyboardType="numeric"
+              />
+              <Button title="Let's do it" onPress={() => {
+                setStudyTime(parseInt(number)); 
+                setModalVisible(false);        
+                console.log(`Starting timer for ${number} minutes`);
+              }} />
+            </View>
+          </View>
+        </Modal>
+
+      </View>
+
       <Text style={styles.header}>Group Chat</Text>
-      
-      <Timer>
-        {/* You can pass a duration prop to Timer if needed */}
-      </Timer>
       
       <FlatList
         ref = {containerRef}
@@ -84,6 +105,7 @@ export default function GroupChatScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+
   container: { flex: 1, padding: 20 },
   header: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
   message: { paddingVertical: 4, fontSize: 16},
@@ -101,97 +123,50 @@ const styles = StyleSheet.create({
     padding: 8,
     marginRight: 8,
   },
+
+  timerInput: {
+    width: 100,         
+    height: 40,         
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    color: "black",
+    borderColor: "white", 
+    backgroundColor: 'white', 
+    fontSize: 18,      
+    marginTop: -10,
+  },
   senderText: {
     color: 'darkred'
   },
   otherText: {
     color: 'black'
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 10,
+    padding: 30,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
 
+  modalText: {
+    marginBottom: 30,
+    textAlign: 'center',
+    fontSize: 18,
+    color: "white",
+  },
 });
-
-//   useEffect(() => {
-//     fetchConversations();
-//     if (user !== null) {
-//       setLoading(false);
-//       // console.log("USER", user);
-//     }
-//   }, [user]);
-
-//   async function fetchConversations() {
-//     try {
-//       const { data, error } = await supabase.from("conversations").select("*");
-//       if (error) {
-//         console.error("Error fetching conversations:", error.message);
-//         return;
-//       }
-//       if (conversations) {
-//         setConversations(data);
-//         console.log("DATA", JSON.stringify(data, null, 4));
-//         setMessages(data[0].messages);
-//       }
-//     } catch (error) {
-//       console.error("Error fetching conversations:", error.message);
-//     }
-//   }
-//   const handleInserts = (payload) => {
-//     console.log("Change received!", JSON.stringify(payload, null, 4));
-//     addNewMessage(payload.new.messages[0]);
-//   };
-//   // Listen to inserts
-//   supabase
-//     .channel("conversations")
-//     .on(
-//       "postgres_changes",
-//       { event: "UPDATE", schema: "public", table: "conversations" },
-//       handleInserts,
-//     )
-//     .subscribe();
-
-//   const addNewMessage = (newMessages) => {
-//     setMessages((previousMessages) => {
-//       // console.log("PREVIOUS MESSAGES:", previousMessages);
-//       // console.log("NEW MESSAGE:", newMessages);
-//       return GiftedChat.append(previousMessages, newMessages);
-//     });
-//   };
-//   const onSend = useCallback((messages = []) => {
-//     addNewMessage(messages);
-//   }, []);
-//   async function postConversations(newMessages) {
-//     const allMessages = [newMessages[0], ...messages];
-//     const { data, error } = await supabase
-//       .from("conversations")
-//       .update({ messages: allMessages })
-//       .eq("id", "areli_allison"); // id to access row of table in supabase, is changable
-//     console.log("POST CONVERSATIONS ERROR: ", error);
-//   }
-//   // console.log("MESSAGES", JSON.stringify(messages, null, 4));
-//   return (
-//     <SafeAreaView style={styles.container}>
-//       {messages && (
-//         // <Text>{JSON.stringify(messages)}</Text>
-//         <GiftedChat
-//           messages={messages}
-//           onSend={(newMessages) => {
-//             onSend(newMessages);
-//             postConversations(newMessages);
-//           }}
-//           user={{
-//             // user that is doing the sending
-//             _id: 2,
-//             name: "Allison",
-//           }}
-//           renderUsernameOnMessage={true}
-//         />
-//       )}
-//     </SafeAreaView>
-//   );
-// }
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#FFFFFF",
-//     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-//   },
-// });

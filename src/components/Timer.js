@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import Constants from 'expo-constants';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
-export function Timer() {
+export function Timer({duration}) {
   const [isPlaying, setIsPlaying] = React.useState(false)
   const [start, setStart] = React.useState(true);
   const [resume, setResume] = React.useState(false);
@@ -13,7 +13,7 @@ export function Timer() {
         
       <CountdownCircleTimer
         isPlaying={isPlaying}
-        duration={10 * 60}
+        duration={duration * 60 || 0}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[10, 6, 3, 0]}
         onComplete={() => ({ shouldRepeat: false})}
