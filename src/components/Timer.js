@@ -16,9 +16,11 @@ export function Timer({duration, navigation}) {
 
   return (
     <View style={styles.container}>
+      {/* Countdown Timer */}
       <CountdownCircleTimer
         isPlaying={isPlaying}
-        duration={duration * 60 || 0}
+        // duration={duration * 60 || 0}
+        duration={1}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[10, 6, 3, 0]}
         onComplete={handleComplete}
@@ -68,7 +70,7 @@ export function Timer({duration, navigation}) {
           }}
         />
       )}
-
+      
       {/* MODAL POP-UP */}
       <Modal
         animationType="slide"

@@ -9,7 +9,7 @@ import CameraScreen from "../screens/CameraScreen";
 import StoriesScreen from "../screens/StoriesScreen";
 import SpotlightScreen from "../screens/SpotlightScreen";
 import ChatScreen from "../screens/ChatScreen";
-
+import EducationalGameScreen from "../screens/EducationalGameScreen";
 // Stacks
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

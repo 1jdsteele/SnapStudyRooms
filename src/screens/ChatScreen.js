@@ -5,7 +5,6 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 // import Ionicons from "react-native-vector-icons/Ionicons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { supabase } from "../utils/hooks/supabase"; // Import Supabase client
-
 import Header from "../components/Header";
 // import { CHATBOTS } from "./ConversationScreen";
 
@@ -22,37 +21,6 @@ export default function ChatScreen({ navigation }) {
 
   const { user } = useAuthentication();
 
-  // function getChatbots() {
-  //   let chatbotsTemp = [];
-  //   for (const botId in CHATBOTS) {
-  //     chatbotsTemp.push({ isChatbot: true, chatId: botId });
-  //   }
-
-  //   setChats((otherChats) => [...otherChats, ...chatbotsTemp]);
-  // }
-
-  // async function getUserChats() {
-  //   // Fetch user chats from Supabase
-  //   const { data: userChats, error } = await supabase
-  //     .from('conversations')
-  //     .select('id')
-  //     .select('messages');
-
-  //   if (error) {
-  //     console.error("Error fetching user chats:", error);
-  //     return;
-  //   }
-
-  //   // Add user chats to array
-  //   let userChatsTemp = [];
-  //   if (userChats) {
-  //     userChats.forEach((userChat) => {
-  //       userChatsTemp.push({ isChatbot: false, chatId: userChat.id });
-  //     });
-  //   }
-
-  //   setChats((otherChats) => [...otherChats, ...userChatsTemp]);
-  // }
 
   async function getUserGroupChats() {
     if (!user?.email) return;
