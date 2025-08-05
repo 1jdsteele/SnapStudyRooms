@@ -16,9 +16,11 @@ import { useAuthentication } from "../utils/hooks/useAuthentication";
 import { useRealtimeChat } from "../hooks/use-realtime-chat";
 import { useChatScroll } from "../hooks/use-chat-scroll";
 import { Timer } from "../components/Timer";
-import Modal from 'react-native-modal';
+import Modal from "react-native-modal";
 
 export default function GroupChatScreen({ route, navigation }) {
+  const [currentStreak, setCurrentStreak] = useState(0);
+
   const { user } = useAuthentication();
   const username = user?.email || "Guest";
   //const isSender = item.user_email === username;
@@ -52,38 +54,112 @@ export default function GroupChatScreen({ route, navigation }) {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
+  //grabbing the streaks from supabase
+  // useEffect(() => {
+  //   const fetchStreak = async () => {
+  //     const { data, error } = await supabase
+  //       .from("room_streaks")
+  //       .select("current_streak")
+  //       .eq("room_id", roomName)
+  //       .single();
+
+  //     if (!error && data) setCurrentStreak(data.current_streak);
+  //   };
+
+  //   fetchStreak();
+
+  //   //consider putting roomName into the dependency array
+  // }, []);
+  useEffect(() => {
+    const fetchStreak = async () => {
+      // First: get the room_id (UUID) by roomName
+      const { data: roomData, error: roomError } = await supabase
+        .from("chat_rooms")
+        .select("id")
+        .eq("name", roomName)
+        .single();
+
+      if (roomError || !roomData) {
+        console.error("Could not find room ID from roomName:", roomError);
+        return;
+      }
+
+      const roomId = roomData.id;
+
+      // Now: query room_streaks using the UUID
+      const { data, error } = await supabase
+        .from("room_streaks")
+        .select("current_streak")
+        .eq("room_id", roomId)
+        // .single();
+        .maybeSingle(); // <= change is here
+
+      if (error) {
+        console.error("Error fetching current_streak:", error);
+      } else if (data) {
+        setCurrentStreak(data.current_streak);
+      } else {
+        setCurrentStreak(0); // Default to 0 if no row exists yet
+      }
+
+      // if (!error && data) {
+      //   setCurrentStreak(data.current_streak);
+      // } else {
+      //   console.error("Error fetching current_streak:", error);
+      // }
+    };
+
+    fetchStreak();
+  }, [roomName]);
+
   const [isModalVisible, setModalVisible] = useState(true);
   const [number, onChangeNumber] = useState(0);
   const [studyTime, setStudyTime] = useState(0);
 
   return (
-
     <View style={styles.container}>
-      <Timer duration={studyTime} navigation={navigation}></Timer>
-      <View style={{flex: 1}}>
+      {/* had problems with user - so now only render when user exists */}
+      {user && (
+        <Timer
+          duration={studyTime}
+          navigation={navigation}
+          roomName={roomName}
+          userEmail={user.email}
+        />
+      )}
+
+      <Text style={{ textAlign: "center", fontSize: 18 }}>
+        🔥 Group Streak: {currentStreak} day{currentStreak === 1 ? "" : "s"}
+        {/* Hello world? */}
+      </Text>
+
+      <View style={{ flex: 1 }}>
         <Modal isVisible={isModalVisible}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>How much time do you want to study?</Text>
+              <Text style={styles.modalText}>
+                How much time do you want to study?
+              </Text>
               <TextInput
                 style={styles.timerInput}
                 onChangeText={onChangeNumber}
                 value={number}
                 keyboardType="numeric"
               />
-              <Button title="Let's do it" onPress={() => {
-                setStudyTime(parseInt(number)); 
-                setModalVisible(false);        
-                console.log(`Starting timer for ${number} minutes`);
-              }} />
+              <Button
+                title="Let's do it"
+                onPress={() => {
+                  setStudyTime(parseInt(number));
+                  setModalVisible(false);
+                  console.log(`Starting timer for ${number} minutes`);
+                }}
+              />
             </View>
           </View>
         </Modal>
-
       </View>
 
       <Text style={styles.header}>Group Chat</Text>
-
 
       <FlatList
         ref={containerRef}
@@ -127,7 +203,6 @@ export default function GroupChatScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-
   container: { flex: 1, padding: 20 },
   header: { fontSize: 20, fontWeight: "bold", marginBottom: 8 },
   message: { paddingVertical: 4, fontSize: 16 },
@@ -147,15 +222,15 @@ const styles = StyleSheet.create({
   },
 
   timerInput: {
-    width: 100,         
-    height: 40,         
+    width: 100,
+    height: 40,
     margin: 12,
     borderWidth: 1,
     padding: 10,
     color: "black",
-    borderColor: "white", 
-    backgroundColor: 'white', 
-    fontSize: 18,      
+    borderColor: "white",
+    backgroundColor: "white",
+    fontSize: 18,
     marginTop: -10,
   },
   senderText: {
@@ -166,16 +241,16 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: "rgba(0,0,0,0.5)",
     borderRadius: 10,
     padding: 30,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -187,7 +262,7 @@ const styles = StyleSheet.create({
 
   modalText: {
     marginBottom: 30,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 18,
     color: "white",
   },
