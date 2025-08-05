@@ -13,7 +13,6 @@ export async function fetchStreakInfo(roomId)
         console.log("Fetched streak data:", data);
         console.log("Supabase error:", error);
 
-
     if (error) 
     {
         throw error

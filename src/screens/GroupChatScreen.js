@@ -17,10 +17,16 @@ import { useRealtimeChat } from "../hooks/use-realtime-chat";
 import { useChatScroll } from "../hooks/use-chat-scroll";
 import { Timer } from "../components/Timer";
 import Modal from 'react-native-modal';
+import { fetchStreakInfo } from "../components/Streaks";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function GroupChatScreen({ route, navigation }) {
   const { user } = useAuthentication();
   const username = user?.email || "Guest";
+  const roomId = route?.params?.roomId;
+  console.log("Received roomId:", roomId);
+  
+
   //const isSender = item.user_email === username;
   // const [test, setTest] = React.useState(false)
 
@@ -37,6 +43,18 @@ export default function GroupChatScreen({ route, navigation }) {
     roomName,
     username,
   });
+
+  const [streakCount, setStreakCount] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  useEffect(() => {
+    const getStreakInfo = async () => {
+      const data = await fetchStreakInfo(roomId);
+      setStreakCount(data.current_streak);
+      setLastUpdated(data.updated);
+    };
+    getStreakInfo();
+  }, [roomId]);
 
   const [input, setInput] = useState("");
   const { containerRef, scrollToBottom } = useChatScroll();
@@ -56,8 +74,9 @@ export default function GroupChatScreen({ route, navigation }) {
   const [number, onChangeNumber] = useState(0);
   const [studyTime, setStudyTime] = useState(0);
 
-  return (
 
+  return (
+    
     <View style={styles.container}>
       <Timer duration={studyTime} navigation={navigation}></Timer>
       <View style={{flex: 1}}>
@@ -75,6 +94,7 @@ export default function GroupChatScreen({ route, navigation }) {
                 setStudyTime(parseInt(number)); 
                 setModalVisible(false);        
                 console.log(`Starting timer for ${number} minutes`);
+              
               }} />
             </View>
           </View>
@@ -83,7 +103,6 @@ export default function GroupChatScreen({ route, navigation }) {
       </View>
 
       <Text style={styles.header}>Group Chat</Text>
-
 
       <FlatList
         ref={containerRef}

@@ -48,9 +48,10 @@ export default function ChatScreen({ navigation }) {
       .filter((entry) => entry.chat_rooms !== null) // filter out any that failed to join
       .map((entry) => ({
         isChatbot: false,
-        chatId: entry.chat_rooms.name,
+        chatId: entry.room_id,
+        chatName: entry.chat_rooms.name,
       }));
-
+      
     // setChats((otherChats) => [...otherChats, ...groupChats]);
     setChats(groupChats);
   }
@@ -129,7 +130,8 @@ export default function ChatScreen({ navigation }) {
                   });
                 } else {
                   navigation.navigate("GroupChat", {
-                    roomName: chat.chatId,
+                    roomName: chat.chatName,
+                    roomId: chat.chatId,
                   });
                 }
               }}
@@ -141,7 +143,7 @@ export default function ChatScreen({ navigation }) {
                 size={36}
                 color="lightgrey"
               />
-              <Text style={styles.userName}> {chat.chatId} </Text>
+              <Text style={styles.userName}> {chat.chatName} </Text>
               <Ionicons
                 style={styles.userCamera}
                 name="camera-outline"

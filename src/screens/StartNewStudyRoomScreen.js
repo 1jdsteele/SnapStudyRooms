@@ -48,6 +48,21 @@ export default function StartNewStudyRoomScreen({ navigation }) {
       emailList.forEach((email) => {
         participants.push({ room_id: room.id, user_email: email });
       });
+    
+      const { error: streakErr } = await supabase
+        .from("track_streaks")
+        .insert([
+          {
+            user_id: room.id,              
+            current_streak: 0,
+            updated: new Date().toISOString(),
+          },
+        ])
+        .select()
+        .single();
+        if (streakErr && !streakErr.message.includes("duplicate")) {
+          throw streakErr;
+        }
 
       const { error: partErr } = await supabase
         .from("room_participants")
@@ -55,7 +70,8 @@ export default function StartNewStudyRoomScreen({ navigation }) {
       if (partErr) throw partErr;
 
       // 3) Go to the new room
-      navigation.navigate("GroupChat", { roomName: room.name });
+      console.log("Room created successfully:", room.id);
+      navigation.navigate("GroupChat", { roomName: room.name, roomId: room.id });
     } catch (e) {
       console.error(e);
       Alert.alert("Could not create room", e.message ?? "Unknown error");
