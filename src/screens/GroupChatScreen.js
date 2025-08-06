@@ -140,7 +140,8 @@ export default function GroupChatScreen({ route, navigation }) {
           userEmail={user.email}
         />
       )}
-
+      
+      <Text style={styles.openingText}> -------------------- Welcome to your study room! --------------------</Text>
       <Text style={{ textAlign: "center", fontSize: 18 }}>
         Group Streak: {currentStreak} day{currentStreak === 1 ? "" : "s"}
       </Text>
@@ -170,8 +171,6 @@ export default function GroupChatScreen({ route, navigation }) {
           </View>
         </Modal>
       </View>
-
-      <Text style={styles.header}>Group Chat</Text>
 
       <FlatList
         ref={containerRef}
@@ -231,7 +230,13 @@ const styles = StyleSheet.create({
     padding: 8,
     marginRight: 8,
   },
-
+  openingText: {
+    fontSize: 12,
+    textAlign: "center",
+    fontFamily: 'Avenir Next',
+    color: '#9A9B9D',
+    fontWeight: '600',
+  },
   timerInput: {
     width: 100,
     height: 40,

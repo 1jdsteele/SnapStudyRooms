@@ -234,15 +234,12 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
 
             if (hours == "00")
             {
-
               return <Text style={{ color, fontSize: 40 }}>{`${minutes}:${seconds}`}</Text>;
             }
             else
             {
               return <Text style={{ color, fontSize: 40 }}>{`${hours}:${minutes}:${seconds}`}</Text>;
             }
-
-          
         }}
       </CountdownCircleTimer>
 
