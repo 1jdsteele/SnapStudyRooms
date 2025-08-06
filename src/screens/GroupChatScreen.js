@@ -23,13 +23,34 @@ export default function GroupChatScreen({ route, navigation }) {
 
   const { user } = useAuthentication();
   const username = user?.email || "Guest";
+  //const isSender = item.user_email === username;
+  // const [test, setTest] = React.useState(false)
 
+  //changes for multiple study rooms
+  // const { messages, sendMessage, isConnected } = useRealtimeChat({
+  //   roomName: "global_room",
+  //   username,
+  // });
+
+  // const roomName = route.params.roomName; // passed in from navigation
   const roomName = route?.params?.roomName ?? "global_room"; // or null with an error
 
   const { messages, sendMessage } = useRealtimeChat({
     roomName,
     username,
   });
+
+  // const [streakCount, setStreakCount] = useState(null);
+  // const [lastUpdated, setLastUpdated] = useState(null);
+
+  // useEffect(() => {
+  //   const getStreakInfo = async () => {
+  //     const data = await fetchStreakInfo(roomId);
+  //     setStreakCount(data.current_streak);
+  //     setLastUpdated(data.updated);
+  //   };
+  //   getStreakInfo();
+  // }, [roomId]);
 
   const [input, setInput] = useState("");
   const { containerRef, scrollToBottom } = useChatScroll();
@@ -142,7 +163,7 @@ export default function GroupChatScreen({ route, navigation }) {
       )}
 
       <Text style={{ textAlign: "center", fontSize: 18 }}>
-        Group Streak: {currentStreak} day{currentStreak === 1 ? "" : "s"}
+        📚🔥 {currentStreak} day{currentStreak === 1 ? "" : "s"}
       </Text>
 
       <View style={{ flex: 1 }}>

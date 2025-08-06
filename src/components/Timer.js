@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Text, View, StyleSheet, Button, Modal } from "react-native";
 import Constants from "expo-constants";
+
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { supabase } from "../utils/hooks/supabase";
 

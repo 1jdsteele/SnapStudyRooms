@@ -1,31 +1,3 @@
-// import React from "react";
-// import { View, Text, Button, StyleSheet, TextInput } from "react-native";
-
-// export default function StartNewStudyRoomScreen({ navigation }) {
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.text}>
-//         This is the new study room creation Screen
-//       </Text>
-//       <TextInput placeholder="Study Room Name" />
-//       <TextInput placeholder="Invite user (email)" />
-//       <Button title="Create Room" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   text: {
-//     fontSize: 20,
-//     marginBottom: 20,
-//   },
-// });
-// screens/StartNewStudyRoomScreen.js
 import React, { useState } from "react";
 import {
   View,
@@ -83,6 +55,7 @@ export default function StartNewStudyRoomScreen({ navigation }) {
       if (partErr) throw partErr;
 
       // 3) Go to the new room
+      console.log("Room created successfully:", room.id);
       navigation.navigate("GroupChat", { roomName: room.name });
     } catch (e) {
       console.error(e);
