@@ -23,16 +23,7 @@ export default function GroupChatScreen({ route, navigation }) {
 
   const { user } = useAuthentication();
   const username = user?.email || "Guest";
-  //const isSender = item.user_email === username;
-  // const [test, setTest] = React.useState(false)
 
-  //changes for multiple study rooms
-  // const { messages, sendMessage, isConnected } = useRealtimeChat({
-  //   roomName: "global_room",
-  //   username,
-  // });
-
-  // const roomName = route.params.roomName; // passed in from navigation
   const roomName = route?.params?.roomName ?? "global_room"; // or null with an error
 
   const { messages, sendMessage } = useRealtimeChat({
@@ -54,54 +45,10 @@ export default function GroupChatScreen({ route, navigation }) {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
-  //grabbing the streaks from supabase
-
-  // useEffect(() => {
-  //   const fetchStreak = async () => {
-  //     // First: get the room_id (UUID) by roomName
-  //     const { data: roomData, error: roomError } = await supabase
-  //       .from("chat_rooms")
-  //       .select("id")
-  //       .eq("name", roomName)
-  //       .single();
-
-  //     if (roomError || !roomData) {
-  //       console.error("Could not find room ID from roomName:", roomError);
-  //       return;
-  //     }
-
-  //     const roomId = roomData.id;
-
-  //     // Now: query room_streaks using the UUID
-  //     const { data, error } = await supabase
-  //       .from("room_streaks")
-  //       .select("current_streak")
-  //       .eq("room_id", roomId)
-  //       // .single();
-  //       .maybeSingle(); // <= change is here
-
-  //     if (error) {
-  //       console.error("Error fetching current_streak:", error);
-  //     } else if (data) {
-  //       setCurrentStreak(data.current_streak);
-  //     } else {
-  //       setCurrentStreak(0); // Default to 0 if no row exists yet
-  //     }
-
-  //     // if (!error && data) {
-  //     //   setCurrentStreak(data.current_streak);
-  //     // } else {
-  //     //   console.error("Error fetching current_streak:", error);
-  //     // }
-  //   };
-
-  //   fetchStreak();
-
-  // }, [roomName]);
   useEffect(() => {
     const fetchStreak = async () => {
       try {
-        // 1. Get the room ID from room name
+        // get room ID from room name
         const { data: roomData, error: roomError } = await supabase
           .from("chat_rooms")
           .select("id")
@@ -116,10 +63,64 @@ export default function GroupChatScreen({ route, navigation }) {
 
         const roomId = roomData.id;
 
-        // 2. Get the current streak data
+        // // get the current streak data
+        // const { data: streakData, error: streakError } = await supabase
+        //   .from("room_streaks")
+        //   .select("current_streak, last_completed_cycle")
+        //   .eq("room_id", roomId)
+        //   .maybeSingle();
+
+        // if (streakError) {
+        //   console.error("Error fetching current streak:", streakError);
+        //   setCurrentStreak(0);
+        //   return;
+        // }
+
+        // // If there's no streak data yet, set to 0
+        // if (!streakData) {
+        //   setCurrentStreak(0);
+        //   return;
+        // }
+
+        // const lastCompleted = new Date(streakData.last_completed_cycle);
+        // const now = new Date();
+
+        // lastCompleted.setSeconds(0);
+        // lastCompleted.setMilliseconds(0);
+        // now.setSeconds(0);
+        // now.setMilliseconds(0);
+
+        // const diffInMinutes = (now - lastCompleted) / 60000;
+
+        // // for testing purposes, 1 "cycle" = 1 minute
+        // const diffInCycles = Math.floor(diffInMinutes / 1);
+
+        // //if it has been 2 cycles without activity on last completed, this is where we reset the streak to 0
+        // // QUESTION: DOES THIS MEAN THAT JUST 1 PERSON CAN "KEEP THE STREAK ALIVE" BUT NOT INCREMENT IT?
+        // // BECAUSE IF SO WE SHOULD PROBABLY CHECK AGAINST LAST INCREMENTED DIRECTLY
+        // // I DIDNT THINK OF IT BEFORE BC I MADE THE NEW COLUMN RECENTLY
+        // if (diffInCycles > 1) {
+        //   console.log(`Streak expired! Diff was ${diffInCycles} cycles.`);
+
+        //   // Reset streak
+        //   const { error: upsertError } = await supabase
+        //     .from("room_streaks")
+        //     .upsert(
+        //       {
+        //         room_id: roomId,
+        //         current_streak: 0,
+        //         last_completed_cycle: lastCompleted.toISOString(),
+        //       },
+        //       { onConflict: ["room_id"] }
+        //     );
+
+        //   if (upsertError) {
+        //     console.error("Error resetting streak:", upsertError);
+        //   }
+        // Get current streak data
         const { data: streakData, error: streakError } = await supabase
           .from("room_streaks")
-          .select("current_streak, last_completed_cycle")
+          .select("current_streak, last_incremented_cycle")
           .eq("room_id", roomId)
           .maybeSingle();
 
@@ -129,36 +130,32 @@ export default function GroupChatScreen({ route, navigation }) {
           return;
         }
 
-        // If there's no streak data yet, set to 0
         if (!streakData) {
           setCurrentStreak(0);
           return;
         }
 
-        const lastCompleted = new Date(streakData.last_completed_cycle);
+        const lastIncremented = new Date(streakData.last_incremented_cycle);
         const now = new Date();
 
-        lastCompleted.setSeconds(0);
-        lastCompleted.setMilliseconds(0);
+        lastIncremented.setSeconds(0);
+        lastIncremented.setMilliseconds(0);
         now.setSeconds(0);
         now.setMilliseconds(0);
 
-        const diffInMinutes = (now - lastCompleted) / 60000;
+        const diffInMinutes = (now - lastIncremented) / 60000;
+        const diffInCycles = Math.floor(diffInMinutes / 1); // 1 minute = 1 cycle
 
-        // for testing purposes, 1 "cycle" = 1 minute
-        const diffInCycles = Math.floor(diffInMinutes / 1);
-
+        //if it's been more than 1 cycle since anyone actually *incremented* the streak
         if (diffInCycles > 1) {
-          console.log(`Streak expired! Diff was ${diffInCycles} cycles.`);
-
-          // Reset streak
           const { error: upsertError } = await supabase
             .from("room_streaks")
             .upsert(
               {
                 room_id: roomId,
                 current_streak: 0,
-                last_completed_cycle: lastCompleted.toISOString(),
+                last_completed_cycle: streakData.last_completed_cycle, // preserve existing value
+                last_incremented_cycle: streakData.last_incremented_cycle, // preserve existing value
               },
               { onConflict: ["room_id"] }
             );
@@ -166,7 +163,6 @@ export default function GroupChatScreen({ route, navigation }) {
           if (upsertError) {
             console.error("Error resetting streak:", upsertError);
           }
-
           setCurrentStreak(0);
         } else {
           setCurrentStreak(streakData.current_streak);
@@ -197,8 +193,7 @@ export default function GroupChatScreen({ route, navigation }) {
       )}
 
       <Text style={{ textAlign: "center", fontSize: 18 }}>
-        📚🔥 Group Streak: {currentStreak} day{currentStreak === 1 ? "" : "s"}
-        {/* Hello world? */}
+        Group Streak: {currentStreak} day{currentStreak === 1 ? "" : "s"}
       </Text>
 
       <View style={{ flex: 1 }}>

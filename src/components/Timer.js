@@ -113,13 +113,15 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
 
     let shouldIncrementStreak = false;
 
-    //if the difference has been less than a minute AND the streak has not incremented, we will increment it
+    //if the difference from the last completed timer has been less than a minute AND the streak has not incremented this minute, we have the possibility to increment it. Inside we will check if all the participants have done so
     if (
       diffInMinutes >= 0 &&
       diffInMinutes < 1 &&
       lastIncrementedCycle.toISOString() !== thisCycle.toISOString()
     ) {
-      console.log("IF STATEMENT TO INCREMENT HIT");
+      // console.log("IF STATEMENT TO INCREMENT HIT");
+
+      //now we get everybody in the group
       const { data: participantData, error: participantError } = await supabase
         .from("room_participants")
         .select("user_email")
@@ -130,9 +132,10 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
         return { shouldRepeat: false };
       }
 
+      //we map to haave just their emails (this could be made better parsing it but... another time)
       const totalParticipants = participantData.map((p) => p.user_email);
 
-      // Step 2: Get users who finished the current cycle
+      //  Get users who finished the current cycle by checking the time stamps
       const { data: sessionData, error: sessionError } = await supabase
         .from("timer_sessions")
         .select("user_email")
@@ -144,17 +147,20 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
         return { shouldRepeat: false };
       }
 
+      //we turn those that finished into a set because we do not care about duplicates
       const uniqueFinishers = [
         ...new Set(sessionData.map((s) => s.user_email)),
       ];
 
+      // defining a boolean if every body has at this point completed a timer in the past minute
       const allFinished = totalParticipants.every((email) =>
         uniqueFinishers.includes(email)
       );
 
-      console.log("Participants:", totalParticipants);
-      console.log("Finishers:", uniqueFinishers);
+      // console.log("Participants:", totalParticipants);
+      // console.log("Finishers:", uniqueFinishers);
 
+      //at this point if everybody has done their timer in the last minute we are good to increment
       if (allFinished) {
         shouldIncrementStreak = true;
         console.log("All users finished. Will increment streak.");
@@ -165,11 +171,12 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
       }
     }
 
+    //incrementing locally
     const newStreak = shouldIncrementStreak
       ? currentStreakData.current_streak + 1
       : currentStreakData.current_streak;
 
-    // Always update last_completed_cycle to mark new cycle start
+    // uploading the streak
     const { error: upsertError } = await supabase.from("room_streaks").upsert(
       {
         room_id: roomId,
