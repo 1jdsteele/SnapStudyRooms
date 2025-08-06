@@ -163,11 +163,12 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
       //at this point if everybody has done their timer in the last minute we are good to increment
       if (allFinished) {
         shouldIncrementStreak = true;
-        console.log("All users finished. Will increment streak.");
+        // console.log("All users finished. Will increment streak.");
       } else {
-        console.log(
-          `Not all users finished. Required: ${totalParticipants.length}, Got: ${uniqueFinishers.length}`
-        );
+        console
+          .log
+          // `Not all users finished. Required: ${totalParticipants.length}, Got: ${uniqueFinishers.length}`
+          ();
       }
     }
 

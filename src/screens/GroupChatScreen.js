@@ -45,6 +45,7 @@ export default function GroupChatScreen({ route, navigation }) {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
+  // TO DO: copy the way that the multiple chats are updated in real time so the streaks are updated in real time ie no need to navigate back and forth to see changes :)
   useEffect(() => {
     const fetchStreak = async () => {
       try {
@@ -63,60 +64,6 @@ export default function GroupChatScreen({ route, navigation }) {
 
         const roomId = roomData.id;
 
-        // // get the current streak data
-        // const { data: streakData, error: streakError } = await supabase
-        //   .from("room_streaks")
-        //   .select("current_streak, last_completed_cycle")
-        //   .eq("room_id", roomId)
-        //   .maybeSingle();
-
-        // if (streakError) {
-        //   console.error("Error fetching current streak:", streakError);
-        //   setCurrentStreak(0);
-        //   return;
-        // }
-
-        // // If there's no streak data yet, set to 0
-        // if (!streakData) {
-        //   setCurrentStreak(0);
-        //   return;
-        // }
-
-        // const lastCompleted = new Date(streakData.last_completed_cycle);
-        // const now = new Date();
-
-        // lastCompleted.setSeconds(0);
-        // lastCompleted.setMilliseconds(0);
-        // now.setSeconds(0);
-        // now.setMilliseconds(0);
-
-        // const diffInMinutes = (now - lastCompleted) / 60000;
-
-        // // for testing purposes, 1 "cycle" = 1 minute
-        // const diffInCycles = Math.floor(diffInMinutes / 1);
-
-        // //if it has been 2 cycles without activity on last completed, this is where we reset the streak to 0
-        // // QUESTION: DOES THIS MEAN THAT JUST 1 PERSON CAN "KEEP THE STREAK ALIVE" BUT NOT INCREMENT IT?
-        // // BECAUSE IF SO WE SHOULD PROBABLY CHECK AGAINST LAST INCREMENTED DIRECTLY
-        // // I DIDNT THINK OF IT BEFORE BC I MADE THE NEW COLUMN RECENTLY
-        // if (diffInCycles > 1) {
-        //   console.log(`Streak expired! Diff was ${diffInCycles} cycles.`);
-
-        //   // Reset streak
-        //   const { error: upsertError } = await supabase
-        //     .from("room_streaks")
-        //     .upsert(
-        //       {
-        //         room_id: roomId,
-        //         current_streak: 0,
-        //         last_completed_cycle: lastCompleted.toISOString(),
-        //       },
-        //       { onConflict: ["room_id"] }
-        //     );
-
-        //   if (upsertError) {
-        //     console.error("Error resetting streak:", upsertError);
-        //   }
         // Get current streak data
         const { data: streakData, error: streakError } = await supabase
           .from("room_streaks")
@@ -135,6 +82,7 @@ export default function GroupChatScreen({ route, navigation }) {
           return;
         }
 
+        //finding out info about last time streak was incremented
         const lastIncremented = new Date(streakData.last_incremented_cycle);
         const now = new Date();
 
@@ -146,7 +94,7 @@ export default function GroupChatScreen({ route, navigation }) {
         const diffInMinutes = (now - lastIncremented) / 60000;
         const diffInCycles = Math.floor(diffInMinutes / 1); // 1 minute = 1 cycle
 
-        //if it's been more than 1 cycle since anyone actually *incremented* the streak
+        //if it's been more than 1 cycle since anyone actually incremented the streak, we reset it
         if (diffInCycles > 1) {
           const { error: upsertError } = await supabase
             .from("room_streaks")
@@ -154,8 +102,8 @@ export default function GroupChatScreen({ route, navigation }) {
               {
                 room_id: roomId,
                 current_streak: 0,
-                last_completed_cycle: streakData.last_completed_cycle, // preserve existing value
-                last_incremented_cycle: streakData.last_incremented_cycle, // preserve existing value
+                last_completed_cycle: streakData.last_completed_cycle,
+                last_incremented_cycle: streakData.last_incremented_cycle,
               },
               { onConflict: ["room_id"] }
             );
@@ -165,6 +113,7 @@ export default function GroupChatScreen({ route, navigation }) {
           }
           setCurrentStreak(0);
         } else {
+          //however, if the streak isn't scheduled to be reset, we set it to what's in the database
           setCurrentStreak(streakData.current_streak);
         }
       } catch (e) {
@@ -244,7 +193,6 @@ export default function GroupChatScreen({ route, navigation }) {
             >
               <Text style={styles.username}>{messageUser} </Text>
               {"\n"}
-              {/* { item.user?.name.split("@")[0] || item.user_email.split("@")[0] || 'Unknown'}:{" "}:  */}
               <Text style={styles.message}>{item.content}</Text>
             </Text>
           );
