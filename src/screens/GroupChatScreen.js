@@ -1,3 +1,4 @@
+//TODO clean up file
 import { React, useState, useEffect, useCallback } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
