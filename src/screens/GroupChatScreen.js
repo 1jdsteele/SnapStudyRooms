@@ -55,58 +55,126 @@ export default function GroupChatScreen({ route, navigation }) {
   }, [messages, scrollToBottom]);
 
   //grabbing the streaks from supabase
+
   // useEffect(() => {
   //   const fetchStreak = async () => {
+  //     // First: get the room_id (UUID) by roomName
+  //     const { data: roomData, error: roomError } = await supabase
+  //       .from("chat_rooms")
+  //       .select("id")
+  //       .eq("name", roomName)
+  //       .single();
+
+  //     if (roomError || !roomData) {
+  //       console.error("Could not find room ID from roomName:", roomError);
+  //       return;
+  //     }
+
+  //     const roomId = roomData.id;
+
+  //     // Now: query room_streaks using the UUID
   //     const { data, error } = await supabase
   //       .from("room_streaks")
   //       .select("current_streak")
-  //       .eq("room_id", roomName)
-  //       .single();
+  //       .eq("room_id", roomId)
+  //       // .single();
+  //       .maybeSingle(); // <= change is here
 
-  //     if (!error && data) setCurrentStreak(data.current_streak);
+  //     if (error) {
+  //       console.error("Error fetching current_streak:", error);
+  //     } else if (data) {
+  //       setCurrentStreak(data.current_streak);
+  //     } else {
+  //       setCurrentStreak(0); // Default to 0 if no row exists yet
+  //     }
+
+  //     // if (!error && data) {
+  //     //   setCurrentStreak(data.current_streak);
+  //     // } else {
+  //     //   console.error("Error fetching current_streak:", error);
+  //     // }
   //   };
 
   //   fetchStreak();
 
-  //   //consider putting roomName into the dependency array
-  // }, []);
+  // }, [roomName]);
   useEffect(() => {
     const fetchStreak = async () => {
-      // First: get the room_id (UUID) by roomName
-      const { data: roomData, error: roomError } = await supabase
-        .from("chat_rooms")
-        .select("id")
-        .eq("name", roomName)
-        .single();
+      try {
+        // 1. Get the room ID from room name
+        const { data: roomData, error: roomError } = await supabase
+          .from("chat_rooms")
+          .select("id")
+          .eq("name", roomName)
+          .single();
 
-      if (roomError || !roomData) {
-        console.error("Could not find room ID from roomName:", roomError);
-        return;
+        if (roomError || !roomData) {
+          console.error("Could not find room ID from roomName:", roomError);
+          setCurrentStreak(0);
+          return;
+        }
+
+        const roomId = roomData.id;
+
+        // 2. Get the current streak data
+        const { data: streakData, error: streakError } = await supabase
+          .from("room_streaks")
+          .select("current_streak, last_completed_cycle")
+          .eq("room_id", roomId)
+          .maybeSingle();
+
+        if (streakError) {
+          console.error("Error fetching current streak:", streakError);
+          setCurrentStreak(0);
+          return;
+        }
+
+        // If there's no streak data yet, set to 0
+        if (!streakData) {
+          setCurrentStreak(0);
+          return;
+        }
+
+        const lastCompleted = new Date(streakData.last_completed_cycle);
+        const now = new Date();
+
+        lastCompleted.setSeconds(0);
+        lastCompleted.setMilliseconds(0);
+        now.setSeconds(0);
+        now.setMilliseconds(0);
+
+        const diffInMinutes = (now - lastCompleted) / 60000;
+
+        // for testing purposes, 1 "cycle" = 1 minute
+        const diffInCycles = Math.floor(diffInMinutes / 1);
+
+        if (diffInCycles > 1) {
+          console.log(`Streak expired! Diff was ${diffInCycles} cycles.`);
+
+          // Reset streak
+          const { error: upsertError } = await supabase
+            .from("room_streaks")
+            .upsert(
+              {
+                room_id: roomId,
+                current_streak: 0,
+                last_completed_cycle: lastCompleted.toISOString(),
+              },
+              { onConflict: ["room_id"] }
+            );
+
+          if (upsertError) {
+            console.error("Error resetting streak:", upsertError);
+          }
+
+          setCurrentStreak(0);
+        } else {
+          setCurrentStreak(streakData.current_streak);
+        }
+      } catch (e) {
+        console.error("Unexpected error in fetchStreak:", e);
+        setCurrentStreak(0);
       }
-
-      const roomId = roomData.id;
-
-      // Now: query room_streaks using the UUID
-      const { data, error } = await supabase
-        .from("room_streaks")
-        .select("current_streak")
-        .eq("room_id", roomId)
-        // .single();
-        .maybeSingle(); // <= change is here
-
-      if (error) {
-        console.error("Error fetching current_streak:", error);
-      } else if (data) {
-        setCurrentStreak(data.current_streak);
-      } else {
-        setCurrentStreak(0); // Default to 0 if no row exists yet
-      }
-
-      // if (!error && data) {
-      //   setCurrentStreak(data.current_streak);
-      // } else {
-      //   console.error("Error fetching current_streak:", error);
-      // }
     };
 
     fetchStreak();
@@ -129,7 +197,7 @@ export default function GroupChatScreen({ route, navigation }) {
       )}
 
       <Text style={{ textAlign: "center", fontSize: 18 }}>
-        🔥 Group Streak: {currentStreak} day{currentStreak === 1 ? "" : "s"}
+        📚🔥 Group Streak: {currentStreak} day{currentStreak === 1 ? "" : "s"}
         {/* Hello world? */}
       </Text>
 
