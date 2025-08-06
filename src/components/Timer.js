@@ -208,19 +208,41 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
       {/* Countdown Timer */}
       <CountdownCircleTimer
         isPlaying={isPlaying}
-        // duration={duration * 60 || 0}
-        duration={1}
+        duration={duration * 60 || 0}
+        // duration={1}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[10, 6, 3, 0]}
         onComplete={handleComplete}
         updateInterval={1}
       >
         {({ remainingTime, color }) => {
-          const minutes = Math.floor(remainingTime / 60);
-          const seconds = remainingTime % 60;
-          const newTime = `${minutes}:${seconds}`;
+          const paddNum = (time) => 
+          {
+            if (time < 10)
+            {
+              return time.toString().padStart(2, "0");
+            }
+            else
+            {
+              return time.toString();
+            }
+          }
 
-          return <Text style={{ color, fontSize: 40 }}>{newTime}</Text>;
+          const hours = paddNum(Math.floor(remainingTime / 3600))
+          const minutes = paddNum(Math.floor((remainingTime % 3600) / 60))
+          const seconds = paddNum(remainingTime % 60)
+
+            if (hours == "00")
+            {
+
+              return <Text style={{ color, fontSize: 40 }}>{`${minutes}:${seconds}`}</Text>;
+            }
+            else
+            {
+              return <Text style={{ color, fontSize: 40 }}>{`${hours}:${minutes}:${seconds}`}</Text>;
+            }
+
+          
         }}
       </CountdownCircleTimer>
 
