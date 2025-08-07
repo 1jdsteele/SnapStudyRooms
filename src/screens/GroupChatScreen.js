@@ -18,6 +18,7 @@ import { useRealtimeChat } from "../hooks/use-realtime-chat";
 import { useChatScroll } from "../hooks/use-chat-scroll";
 import { Timer } from "../components/Timer";
 import Modal from "react-native-modal";
+//it works
 
 export default function GroupChatScreen({ route, navigation }) {
   const [currentStreak, setCurrentStreak] = useState(0);
