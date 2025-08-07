@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Button, Modal } from "react-native";
 import Constants from "expo-constants";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { supabase } from "../utils/hooks/supabase";
+import { TimerFormat } from "../components/Timer";
 
 export function Timer({ duration, navigation, roomName, userEmail }) {
   console.log("roomName:", roomName);
@@ -13,6 +14,7 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
   const [resume, setResume] = React.useState(false);
   const [showModal, setShowModal] = React.useState(false);
   const streakCycleRef = React.useRef(null);
+  const [studyTime, setStudyTime] = React.useState([0, 0, 0]);
 
   const handleStartSession = async () => {
     setIsPlaying(true);
@@ -203,12 +205,17 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
     return { shouldRepeat: false };
   };
 
+  React.useEffect(() => {
+    setStudyTime(TimerFormat(duration));
+  }, [duration]);
+  
   return (
     <View style={styles.container}>
+
       {/* Countdown Timer */}
       <CountdownCircleTimer
         isPlaying={isPlaying}
-        duration={duration * 60 || 0}
+        duration={ (studyTime[0] + studyTime[1] + studyTime[2]) * 60 || 0}
         // duration={1}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[10, 6, 3, 0]}

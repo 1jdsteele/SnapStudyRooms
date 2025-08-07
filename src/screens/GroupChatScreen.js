@@ -126,8 +126,8 @@ export default function GroupChatScreen({ route, navigation }) {
   }, [roomName]);
 
   const [isModalVisible, setModalVisible] = useState(true);
-  const [number, onChangeNumber] = useState(0);
-  const [studyTime, setStudyTime] = useState(0);
+  const [number, onChangeNumber] = useState("");
+  const [studyTime, setStudyTime] = useState("00:00");
 
   return (
     <View style={styles.container}>
@@ -157,14 +157,14 @@ export default function GroupChatScreen({ route, navigation }) {
                 style={styles.timerInput}
                 onChangeText={onChangeNumber}
                 value={number}
-                keyboardType="numeric"
+                placeholderTextColor={"grey"}
+                placeholder="00:00"
               />
               <Button
                 title="Let's do it"
                 onPress={() => {
-                  setStudyTime(parseInt(number));
+                  setStudyTime(number);
                   setModalVisible(false);
-                  console.log(`Starting timer for ${number} minutes`);
                 }}
               />
             </View>
