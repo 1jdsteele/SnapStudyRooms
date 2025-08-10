@@ -152,6 +152,17 @@ export default function ChatScreen({ navigation }) {
             </TouchableOpacity>
           );
         })}
+  {/* Since ChatScreen is in UserTab for navigation and we're trying to reach a new study room that lives in UserStack, calling getParent()
+  will navigate to the parent stack screen. */}
+        <TouchableOpacity
+          onPress={() => {
+            const parentNavigation = navigation.getParent();
+            parentNavigation.navigate("NewStudyRoom");
+          }}
+          activeOpacity={0.85}
+        >
+          <Ionicons name="add-circle-outline" size={40} color="blue" />
+        </TouchableOpacity>
       </View>
     </View>
   );
