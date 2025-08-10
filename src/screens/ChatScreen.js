@@ -6,6 +6,7 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { supabase } from "../utils/hooks/supabase"; // Import Supabase client
 import Header from "../components/Header";
+import { useNavigation } from "@react-navigation/native";
 // import { CHATBOTS } from "./ConversationScreen";
 //
 
@@ -151,40 +152,6 @@ export default function ChatScreen({ navigation }) {
             </TouchableOpacity>
           );
         })}
-        {/* <TouchableOpacity
-          style={[styles.userButton, {}]}
-          onPress={() =>
-            navigation.navigate("GroupChat", { roomName: "global_room" })
-          }
-          key="global-chat"
-        >
-          <Ionicons
-            style={styles.userIcon}
-            name="people-outline"
-            size={36}
-            color="lightgrey"
-          />
-          <Text style={[styles.userName, { color: "black" }]}>
-            Global Group Chat
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.userButton, {}]}
-          onPress={() =>
-            navigation.navigate("GroupChat", { roomName: "CS Study Group" })
-          }
-          key="cs-chat"
-        >
-          <Ionicons
-            style={styles.userIcon}
-            name="people-outline"
-            size={36}
-            color="lightgrey"
-          />
-          <Text style={[styles.userName, { color: "black" }]}>
-            CS Study Group
-          </Text>
-        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -217,4 +184,6 @@ const styles = StyleSheet.create({
     right: 15,
     top: 10,
   },
+  
+
 });

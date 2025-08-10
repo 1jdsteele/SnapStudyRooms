@@ -13,6 +13,7 @@ import MemoryScreen from "../screens/MemoryScreen";
 import EventScreen from "../screens/EventScreen"; //New component by Sona and Christian
 import GroupChatScreen from "../screens/GroupChatScreen";
 import ChatScreen from "../screens/ChatScreen";
+import StartNewStudyRoomScreen from "../screens/StartNewStudyRoomScreen";
 
 import EducationalGameScreen from "../screens/EducationalGameScreen";
 import EducationalVideoScreen from "../screens/EducationalVideoScreen";
@@ -91,6 +92,13 @@ export default function App() {
           component={EducationalGameScreen}
           options={{ headerShown: true }}
         />
+
+        <Stack.Screen
+          name="NewStudyRoom"
+          component={StartNewStudyRoomScreen}
+          options={{ headerShown: true }}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -127,7 +127,7 @@ export default function GroupChatScreen({ route, navigation }) {
 
   const [isModalVisible, setModalVisible] = useState(true);
   const [number, onChangeNumber] = useState("");
-  const [studyTime, setStudyTime] = useState("00:00");
+  const [studyTime, setStudyTime] = useState(0);
 
   return (
     <View style={styles.container}>
@@ -158,15 +158,17 @@ export default function GroupChatScreen({ route, navigation }) {
                 onChangeText={onChangeNumber}
                 value={number}
                 placeholderTextColor={"grey"}
-                placeholder="00:00"
+                placeholder="Minutes"
               />
+              
               <Button
                 title="Let's do it"
                 onPress={() => {
-                  setStudyTime(number);
+                  setStudyTime(parseInt(number));
                   setModalVisible(false);
                 }}
               />
+
             </View>
           </View>
         </Modal>
@@ -238,10 +240,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   timerInput: {
-    width: 100,
+    width: 90,
     height: 40,
     margin: 12,
     borderWidth: 1,
+    borderColor: "grey",
+    borderRadius: 6,
     padding: 10,
     color: "black",
     borderColor: "white",
