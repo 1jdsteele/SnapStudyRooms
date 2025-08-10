@@ -154,14 +154,15 @@ export default function ChatScreen({ navigation }) {
         })}
   {/* Since ChatScreen is in UserTab for navigation and we're trying to reach a new study room that lives in UserStack, calling getParent()
   will navigate to the parent stack screen. */}
-        <TouchableOpacity
+        <TouchableOpacity style={styles.circleIcon}
           onPress={() => {
             const parentNavigation = navigation.getParent();
             parentNavigation.navigate("NewStudyRoom");
           }}
           activeOpacity={0.85}
         >
-          <Ionicons name="add-circle-outline" size={40} color="blue" />
+          <Ionicons name="chatbox-outline" size={30} color={"black"}/>
+          
         </TouchableOpacity>
       </View>
     </View>
@@ -178,6 +179,21 @@ const styles = StyleSheet.create({
     display: "flex",
     borderBottomColor: "lightgrey",
     borderBottomWidth: 1,
+  },
+  circleIcon: {
+    width: 60,
+    height: 60,
+    top: 375,
+    left: 325,
+    borderRadius: 50,
+    backgroundColor: "yellow",
+    alignItems: "center",     
+    justifyContent: "center",
+    shadowColor: "#000",     
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 8 },
+
   },
   userIcon: {
     position: "absolute",
