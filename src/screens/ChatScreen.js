@@ -32,24 +32,35 @@ export default function ChatScreen({ navigation }) {
       .select("room_id, chat_rooms(name)")
       .eq("user_email", user.email);
 
-    if (error) {
+    if (error) 
+    {
       console.error("Error fetching group chats:", error);
       return;
     }
 
-    // Extract room names
-    // const groupChats = data.map((entry) => ({
-    //   isChatbot: false,
-    //   chatId: entry.chat_rooms.name, // Use name as ID
-    // }));
+    // All of the rooms (identified by id number) that the user is part of
+    const roomIds = data.map((entry) => entry.room_id);
+    console.log("FETCHED Room Ids:", roomIds);
 
-    console.log("FETCHED GROUP CHATS:", data);
+    // const {data: streak, error: streakError} = await supabase
+    //   .from("room_streaks")
+    //   .select("room_id", "current_streak")
+    //   .in("room_id", roomIds);
+    // if (streakError) 
+    // {
+    //   console.error("Error fetching streak info:", error);
+    //   return;
+    // }
+
+    // const allStreaks = streak.map((entry) => entry.current_streak);
+    // console.log("FETCHED Streaks:", allStreaks);
 
     const groupChats = data
       .filter((entry) => entry.chat_rooms !== null) // filter out any that failed to join
       .map((entry) => ({
         isChatbot: false,
         chatId: entry.chat_rooms.name,
+        //streak: allStreaks.get(entry.room_id) ?? 0,
       }));
 
     // setChats((otherChats) => [...otherChats, ...groupChats]);

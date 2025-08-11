@@ -132,6 +132,12 @@ export default function GroupChatScreen({ route, navigation }) {
   return (
     <View style={styles.container}>
       {/* had problems with user - so now only render when user exists */}
+      <View style={styles.streakBox}>
+        <Text style={{ textAlign: "center", fontSize: 18, color: "black" }}>
+          📚🔥 {currentStreak} day{currentStreak === 1 ? "" : "s"}
+        </Text>
+      </View>
+
       {user && (
         <Timer
           duration={studyTime}
@@ -140,11 +146,8 @@ export default function GroupChatScreen({ route, navigation }) {
           userEmail={user.email}
         />
       )}
-      
-      <Text style={styles.openingText}> -------------------- Welcome to your study room! --------------------</Text>
-      <Text style={{ textAlign: "center", fontSize: 18 }}>
-        Group Streak: {currentStreak} day{currentStreak === 1 ? "" : "s"}
-      </Text>
+    
+       <Text style={styles.openingText}> -------------------- Welcome to your study room! --------------------</Text>
 
       <View style={{ flex: 1 }}>
         <Modal isVisible={isModalVisible}>
@@ -286,4 +289,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "white",
   },
+  streakBox: {
+    backgroundColor: "#D3D3D3", 
+    paddingVertical: 8, 
+    paddingHorizontal: 20, 
+    borderRadius: 8
+  }
 });
