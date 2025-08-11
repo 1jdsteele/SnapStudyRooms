@@ -11,8 +11,9 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [start, setStart] = React.useState(true);
   const [resume, setResume] = React.useState(false);
-  const [showModal, setShowModal] = React.useState(false);
   const streakCycleRef = React.useRef(null);
+  const [bitmojiModal, setBitmojiModal] = React.useState(false);
+  const [engagementModal, setEngagementModal] = React.useState(false);
 
   const handleStartSession = async () => {
     setIsPlaying(true);
@@ -265,7 +266,7 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
           }}
         />
       )}
-
+      
       {/* MODAL POP-UP */}
       <Modal
         animationType="slide"
