@@ -153,11 +153,6 @@ export default function ChatScreen({ navigation }) {
                 size={36}
                 color="lightgrey"
               /> */}
-              <Image
-                source={{ uri:"https://sdk.bitmoji.com/render/panel/10212369-104932755325_2-s5-v1.png?transparent=1&palette=1&scale=2",}}
-                style={{ width: 18, height: 18, borderRadius: 18 }}
-                resizeMode="cover"
-              />
               <Text style={styles.userName}> {chat.chatId} </Text>
               <Ionicons
                 style={styles.userCamera}
