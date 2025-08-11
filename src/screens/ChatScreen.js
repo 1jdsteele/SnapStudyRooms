@@ -153,6 +153,12 @@ export default function ChatScreen({ navigation }) {
                 size={36}
                 color="lightgrey"
               /> */}
+              <View style={styles.pfpWrapper}>
+                <Image
+                  source={{ uri: "https://sdk.bitmoji.com/render/panel/10212369-104932755325_2-s5-v1.png?transparent=1&palette=1&scale=2",}}
+                  style={styles.profilePicture}
+                />
+              </View>
               <Text style={styles.userName}> {chat.chatId} </Text>
               <Ionicons
                 style={styles.userCamera}
@@ -190,6 +196,19 @@ const styles = StyleSheet.create({
     display: "flex",
     borderBottomColor: "lightgrey",
     borderBottomWidth: 1,
+  },
+  pfpWrapper: {
+    width: 50,
+    height: 50,
+    overflow: "hidden",
+    position: "absolute", 
+    left: 2,
+    top: -4,
+  },
+  profilePicture: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   circleIcon: {
     width: 60,
