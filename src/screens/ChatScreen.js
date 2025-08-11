@@ -183,7 +183,7 @@ export default function ChatScreen({ navigation }) {
           
         </TouchableOpacity>
       </View>
-
+      
       </View>
     </View>
   );
@@ -224,7 +224,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 8 },
-
   },
   circleIconWrap: {
     position: "absolute",

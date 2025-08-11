@@ -291,6 +291,24 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
       </Modal>
 
       <Modal
+        animationType="fade"
+        transparent={true}
+        visible={bitmojiModal}
+      >
+        <View style={styles.modalOverlay}>
+          <Text style={styles.bitmojiText}>Time's Up!</Text>
+          <View style={styles.bitmojiWrapper}>
+            <Image
+              source={{
+                uri: "https://sdk.bitmoji.com/render/panel/10225492-105005923806_1-s5-v1.png?transparent=1&palette=1&scale=2",
+              }}
+              style={styles.bitmojiIcon}
+            />
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
         animationType="slide"
         transparent={true}
         visible={engagementModal}
@@ -300,33 +318,52 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
+            <Text style={{ fontWeight: "bold", fontSize: 18}}>
+              Great job studying today!
+            </Text>
             <Text style={styles.modalText}>
-              You finished your study session!{"\n"}
-              To complete your streak for the day, choose one of the options
-              below:
+              Your streak is up! {"\n"}
+              Would you like to...
             </Text>
 
-            <Button
-              title="Watch a video"
-              onPress={() => {
-                setEngagementModal(false);
-                navigation.navigate("EducationalVideo");
-              }}
-            />
+            <View style={styles.optionsRow}>
+              <View style={{ flex: 1, backgroundColor: "#0fADFF", borderRadius: 16, overflow: "hidden" }}>
+                <Button
+                  title="Watch a video"
+                  color="white"
+                  fontWeight="bold"
+                  onPress={() => {
+                    setEngagementModal(false);
+                    navigation.navigate("EducationalVideo");
+                  }}
+                />
+              </View>
 
-            <Button
-              title="Try a lens"
-              onPress={() => {
-                setEngagementModal(false);
-                navigation.navigate("EducationalGame");
-              }}
-            />
-            <Button title="Finished" onPress={() => setEngagementModal(false)} />
+              <View style={{ width: 10 }} />
+
+              <View style={{ flex: 1, backgroundColor: "#0fADFF", borderRadius: 16, overflow: "hidden" }}>
+                <Button
+                  color="white"
+                  fontWeight="bold"
+                  title="Try a lens"
+                  onPress={() => {
+                    setEngagementModal(false);
+                    navigation.navigate("EducationalGame");
+                  }}
+                />
+              </View>
+            </View>
+
+            <View style={{ marginTop: 12 }}>
+              <Button
+                title="Finished"
+                onPress={() => setEngagementModal(false)}
+              />
+            </View>
           </View>
         </View>
       </Modal>
-
-    </View>
+        </View>
   );
 }
 
@@ -339,6 +376,12 @@ const styles = StyleSheet.create({
     padding: 8,
   },
 
+  optionsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 5,
+  },
+
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
@@ -347,7 +390,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-    padding: 20,
+    padding: 30,
     borderRadius: 10,
     alignItems: "center",
     shadowColor: "#000",
@@ -355,6 +398,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    width: 350,
+
   },
   modalText: {
     fontSize: 16,
