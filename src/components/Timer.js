@@ -282,7 +282,7 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
             </Text>
 
             <Button
-              title="Watch a video!"
+              title="Watch a video"
               onPress={() => {
                 setShowModal(false);
                 navigation.navigate("EducationalVideo");
@@ -290,14 +290,14 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
             />
 
             <Button
-              title="Play a game!"
+              title="Try a lens"
               onPress={() => {
                 setShowModal(false);
                 navigation.navigate("EducationalGame");
               }}
             />
 
-            <Button title="Go back" onPress={() => setShowModal(false)} />
+            <Button title="Finished" onPress={() => setShowModal(false)} />
           </View>
         </View>
       </Modal>
