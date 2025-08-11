@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 // import Ionicons from "react-native-vector-icons/Ionicons";
@@ -147,11 +147,16 @@ export default function ChatScreen({ navigation }) {
               }}
               key={chat.chatId}
             >
-              <Ionicons
+              {/* <Ionicons
                 style={styles.userIcon}
                 name="person-outline"
                 size={36}
                 color="lightgrey"
+              /> */}
+              <Image
+                source={{ uri:"https://sdk.bitmoji.com/render/panel/10212369-104932755325_2-s5-v1.png?transparent=1&palette=1&scale=2",}}
+                style={{ width: 18, height: 18, borderRadius: 18 }}
+                resizeMode="cover"
               />
               <Text style={styles.userName}> {chat.chatId} </Text>
               <Ionicons

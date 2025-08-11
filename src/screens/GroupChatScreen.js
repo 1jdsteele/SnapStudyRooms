@@ -147,7 +147,7 @@ export default function GroupChatScreen({ route, navigation }) {
         />
       )}
     
-       <Text style={styles.openingText}> -------------------- Welcome to your study room! --------------------</Text>
+      <Text style={styles.openingText}> -------------------- Welcome to your study room! --------------------</Text>
 
       <View style={{ flex: 1 }}>
         <Modal isVisible={isModalVisible}>

@@ -209,7 +209,7 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
       {/* Countdown Timer */}
       <CountdownCircleTimer
         isPlaying={isPlaying}
-        duration={ duration * 60 || 0}
+        duration={ duration || 0}
         // duration={1}
         colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
         colorsTime={[10, 6, 3, 0]}
