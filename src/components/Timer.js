@@ -60,7 +60,11 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
 
   const handleComplete = async () => {
     // console.log("HANDLE COMPLETE HIT 1");
-    setShowModal(true);
+    setBitmojiModal(true);
+    setTimeout(() => {
+      setBitmojiModal(false);
+      setEngagementModal(true);
+    }, 2000);
 
     // get room_id and save to roomId
     const { data: roomData, error: roomError } = await supabase
@@ -269,10 +273,9 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
       
       {/* MODAL POP-UP */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
-        visible={showModal}
-        onRequestClose={() => setShowModal(false)}
+        visible={bitmojiModal}
       >
         <View style={styles.modalOverlay}>
           <Text style={styles.bitmojiText}>
@@ -284,7 +287,19 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
               style={styles.bitmojiIcon}
             />
           </View>
-          {/* <View style={styles.modalContent}>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={engagementModal}
+        onRequestClose={() => {
+          setEngagementModal(false);
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
             <Text style={styles.modalText}>
               You finished your study session!{"\n"}
               To complete your streak for the day, choose one of the options
@@ -294,7 +309,7 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
             <Button
               title="Watch a video"
               onPress={() => {
-                setShowModal(false);
+                setEngagementModal(false);
                 navigation.navigate("EducationalVideo");
               }}
             />
@@ -302,15 +317,15 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
             <Button
               title="Try a lens"
               onPress={() => {
-                setShowModal(false);
+                setEngagementModal(false);
                 navigation.navigate("EducationalGame");
               }}
             />
-
-            <Button title="Finished" onPress={() => setShowModal(false)} />
-          </View> */}
+            <Button title="Finished" onPress={() => setEngagementModal(false)} />
+          </View>
         </View>
       </Modal>
+
     </View>
   );
 }
