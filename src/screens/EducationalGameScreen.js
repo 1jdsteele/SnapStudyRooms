@@ -4,11 +4,7 @@ import { View, Text, Button, StyleSheet } from "react-native";
 export default function EducationalGameScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>This is the Educational Game Screen</Text>
-      <Button
-        title="Back to Chat"
-        onPress={() => navigation.navigate("UserTab", { screen: "Chat" })}
-      />
+      <Text style={styles.text}>This is where you try on the lens</Text>
     </View>
   );
 }
