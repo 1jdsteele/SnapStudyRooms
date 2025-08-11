@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View, StyleSheet, Button, Modal } from "react-native";
+import { Text, View, StyleSheet, Button, Modal, Image } from "react-native";
 import Constants from "expo-constants";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { supabase } from "../utils/hooks/supabase";
@@ -274,7 +274,16 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
         onRequestClose={() => setShowModal(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+          <Text style={styles.bitmojiText}>
+            Time's Up!
+          </Text>
+          <View style={styles.bitmojiWrapper}>
+            <Image
+              source={{uri: "https://sdk.bitmoji.com/render/panel/10225492-105005923806_1-s5-v1.png?transparent=1&palette=1&scale=2",}}
+              style={styles.bitmojiIcon}
+            />
+          </View>
+          {/* <View style={styles.modalContent}>
             <Text style={styles.modalText}>
               You finished your study session!{"\n"}
               To complete your streak for the day, choose one of the options
@@ -298,7 +307,7 @@ export function Timer({ duration, navigation, roomName, userEmail }) {
             />
 
             <Button title="Finished" onPress={() => setShowModal(false)} />
-          </View>
+          </View> */}
         </View>
       </Modal>
     </View>
@@ -336,4 +345,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
+  bitmojiIcon: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+  },
+  bitmojiWrapper: {
+    width: 350,
+    height: 350,
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bitmojiText: {
+    fontSize: 60, 
+    fontWeight: "bold", 
+    marginTop: 75, 
+    color: "white", 
+    fontFamily: 'Avenir Next',
+  }
 });
