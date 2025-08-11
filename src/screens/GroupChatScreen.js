@@ -149,12 +149,18 @@ export default function GroupChatScreen({ route, navigation }) {
   }, [roomName]);
 
   const [isModalVisible, setModalVisible] = useState(true);
-  const [number, onChangeNumber] = useState(0);
+  const [number, onChangeNumber] = useState("");
   const [studyTime, setStudyTime] = useState(0);
 
   return (
     <View style={styles.container}>
       {/* had problems with user - so now only render when user exists */}
+      <View style={styles.streakBox}>
+        <Text style={{ textAlign: "center", fontSize: 18, color: "black" }}>
+          📚🔥 {currentStreak} day{currentStreak === 1 ? "" : "s"}
+        </Text>
+      </View>
+
       {user && (
         <Timer
           duration={studyTime}
@@ -164,8 +170,9 @@ export default function GroupChatScreen({ route, navigation }) {
         />
       )}
 
-      <Text style={{ textAlign: "center", fontSize: 18 }}>
-        📚🔥 {currentStreak} day{currentStreak === 1 ? "" : "s"}
+      <Text style={styles.openingText}>
+        {" "}
+        -------------------- Welcome to your study room! --------------------
       </Text>
 
       <View style={{ flex: 1 }}>
@@ -179,22 +186,21 @@ export default function GroupChatScreen({ route, navigation }) {
                 style={styles.timerInput}
                 onChangeText={onChangeNumber}
                 value={number}
-                keyboardType="numeric"
+                placeholderTextColor={"grey"}
+                placeholder="Minutes"
               />
+
               <Button
                 title="Let's do it"
                 onPress={() => {
                   setStudyTime(parseInt(number));
                   setModalVisible(false);
-                  console.log(`Starting timer for ${number} minutes`);
                 }}
               />
             </View>
           </View>
         </Modal>
       </View>
-
-      <Text style={styles.header}>Group Chat</Text>
 
       <FlatList
         ref={containerRef}
@@ -254,12 +260,20 @@ const styles = StyleSheet.create({
     padding: 8,
     marginRight: 8,
   },
-
+  openingText: {
+    fontSize: 12,
+    textAlign: "center",
+    fontFamily: "Avenir Next",
+    color: "#9A9B9D",
+    fontWeight: "600",
+  },
   timerInput: {
-    width: 100,
+    width: 90,
     height: 40,
     margin: 12,
     borderWidth: 1,
+    borderColor: "grey",
+    borderRadius: 6,
     padding: 10,
     color: "black",
     borderColor: "white",
@@ -299,5 +313,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
     color: "white",
+  },
+  streakBox: {
+    backgroundColor: "#D3D3D3",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 8,
   },
 });

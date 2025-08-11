@@ -83,7 +83,6 @@ export default function UserStack({ route, navigation }) {
         component={SpotlightScreen}
         options={screenOptions}
       />
-
     </Tab.Navigator>
   );
 }

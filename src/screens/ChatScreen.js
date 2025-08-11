@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 // import Ionicons from "react-native-vector-icons/Ionicons";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { supabase } from "../utils/hooks/supabase"; // Import Supabase client
 import Header from "../components/Header";
+import { useNavigation } from "@react-navigation/native";
 // import { CHATBOTS } from "./ConversationScreen";
 //
 
@@ -36,22 +37,32 @@ export default function ChatScreen({ navigation }) {
       return;
     }
 
-    // Extract room names
-    // const groupChats = data.map((entry) => ({
-    //   isChatbot: false,
-    //   chatId: entry.chat_rooms.name, // Use name as ID
-    // }));
+    // All of the rooms (identified by id number) that the user is part of
+    const roomIds = data.map((entry) => entry.room_id);
+    console.log("FETCHED Room Ids:", roomIds);
 
-    console.log("FETCHED GROUP CHATS:", data);
+    // const {data: streak, error: streakError} = await supabase
+    //   .from("room_streaks")
+    //   .select("room_id", "current_streak")
+    //   .in("room_id", roomIds);
+    // if (streakError)
+    // {
+    //   console.error("Error fetching streak info:", error);
+    //   return;
+    // }
+
+    // const allStreaks = streak.map((entry) => entry.current_streak);
+    // console.log("FETCHED Streaks:", allStreaks);
 
     const groupChats = data
       .filter((entry) => entry.chat_rooms !== null) // filter out any that failed to join
       .map((entry) => ({
         isChatbot: false,
-        chatId: entry.room_id,
-        chatName: entry.chat_rooms.name,
+        // chatId: entry.room_id,
+        // chatName: entry.chat_rooms.name,
+        chatId: entry.chat_rooms.name,
       }));
-      
+
     // setChats((otherChats) => [...otherChats, ...groupChats]);
     setChats(groupChats);
   }
@@ -137,13 +148,13 @@ export default function ChatScreen({ navigation }) {
               }}
               key={chat.chatId}
             >
-              <Ionicons
+              {/* <Ionicons
                 style={styles.userIcon}
                 name="person-outline"
                 size={36}
                 color="lightgrey"
-              />
-              <Text style={styles.userName}> {chat.chatName} </Text>
+              /> */}
+              <Text style={styles.userName}> {chat.chatId} </Text>
               <Ionicons
                 style={styles.userCamera}
                 name="camera-outline"
@@ -153,40 +164,18 @@ export default function ChatScreen({ navigation }) {
             </TouchableOpacity>
           );
         })}
-        {/* <TouchableOpacity
-          style={[styles.userButton, {}]}
-          onPress={() =>
-            navigation.navigate("GroupChat", { roomName: "global_room" })
-          }
-          key="global-chat"
-        >
-          <Ionicons
-            style={styles.userIcon}
-            name="people-outline"
-            size={36}
-            color="lightgrey"
-          />
-          <Text style={[styles.userName, { color: "black" }]}>
-            Global Group Chat
-          </Text>
-        </TouchableOpacity>
+        {/* Since ChatScreen is in UserTab for navigation and we're trying to reach a new study room that lives in UserStack, calling getParent()
+  will navigate to the parent stack screen. */}
         <TouchableOpacity
-          style={[styles.userButton, {}]}
-          onPress={() =>
-            navigation.navigate("GroupChat", { roomName: "CS Study Group" })
-          }
-          key="cs-chat"
+          style={styles.circleIcon}
+          onPress={() => {
+            const parentNavigation = navigation.getParent();
+            parentNavigation.navigate("NewStudyRoom");
+          }}
+          activeOpacity={0.85}
         >
-          <Ionicons
-            style={styles.userIcon}
-            name="people-outline"
-            size={36}
-            color="lightgrey"
-          />
-          <Text style={[styles.userName, { color: "black" }]}>
-            CS Study Group
-          </Text>
-        </TouchableOpacity> */}
+          <Ionicons name="chatbox-outline" size={30} color={"black"} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -202,6 +191,20 @@ const styles = StyleSheet.create({
     display: "flex",
     borderBottomColor: "lightgrey",
     borderBottomWidth: 1,
+  },
+  circleIcon: {
+    width: 60,
+    height: 60,
+    top: 375,
+    left: 325,
+    borderRadius: 50,
+    backgroundColor: "yellow",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 8 },
   },
   userIcon: {
     position: "absolute",
