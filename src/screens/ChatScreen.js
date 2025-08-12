@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 // import Ionicons from "react-native-vector-icons/Ionicons";
@@ -51,7 +57,7 @@ export default function ChatScreen({ navigation }) {
         chatId: entry.room_id,
         chatName: entry.chat_rooms.name,
       }));
-      
+
     // setChats((otherChats) => [...otherChats, ...groupChats]);
     setChats(groupChats);
   }
@@ -112,48 +118,49 @@ export default function ChatScreen({ navigation }) {
     >
       <Header title="Chats" />
       <View>
-        {chats?.map((chat) => {
-          return (
-            <TouchableOpacity
-              style={styles.userButton}
-              // onPress={() => {
-              //   navigation.navigate("Conversation", {
-              //     isChatbot: chat.isChatbot,
-              //     chatId: chat.chatId,
-              //   });
-              // }}
-              onPress={() => {
-                if (chat.isChatbot) {
-                  navigation.navigate("Conversation", {
-                    isChatbot: true,
-                    chatId: chat.chatId,
-                  });
-                } else {
-                  navigation.navigate("GroupChat", {
-                    roomName: chat.chatName,
-                    roomId: chat.chatId,
-                  });
-                }
-              }}
-              key={chat.chatId}
-            >
-              <Ionicons
-                style={styles.userIcon}
-                name="person-outline"
-                size={36}
-                color="lightgrey"
-              />
-              <Text style={styles.userName}> {chat.chatName} </Text>
-              <Ionicons
-                style={styles.userCamera}
-                name="camera-outline"
-                size={24}
-                color="lightgrey"
-              />
-            </TouchableOpacity>
-          );
-        })}
-        {/* <TouchableOpacity
+        <ScrollView>
+          {chats?.map((chat) => {
+            return (
+              <TouchableOpacity
+                style={styles.userButton}
+                // onPress={() => {
+                //   navigation.navigate("Conversation", {
+                //     isChatbot: chat.isChatbot,
+                //     chatId: chat.chatId,
+                //   });
+                // }}
+                onPress={() => {
+                  if (chat.isChatbot) {
+                    navigation.navigate("Conversation", {
+                      isChatbot: true,
+                      chatId: chat.chatId,
+                    });
+                  } else {
+                    navigation.navigate("GroupChat", {
+                      roomName: chat.chatName,
+                      roomId: chat.chatId,
+                    });
+                  }
+                }}
+                key={chat.chatId}
+              >
+                <Ionicons
+                  style={styles.userIcon}
+                  name="person-outline"
+                  size={36}
+                  color="lightgrey"
+                />
+                <Text style={styles.userName}> {chat.chatName} </Text>
+                <Ionicons
+                  style={styles.userCamera}
+                  name="camera-outline"
+                  size={24}
+                  color="lightgrey"
+                />
+              </TouchableOpacity>
+            );
+          })}
+          {/* <TouchableOpacity
           style={[styles.userButton, {}]}
           onPress={() =>
             navigation.navigate("GroupChat", { roomName: "global_room" })
@@ -187,6 +194,7 @@ export default function ChatScreen({ navigation }) {
             CS Study Group
           </Text>
         </TouchableOpacity> */}
+        </ScrollView>
       </View>
     </View>
   );
