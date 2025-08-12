@@ -146,8 +146,11 @@ export default function GroupChatScreen({ route, navigation }) {
           userEmail={user.email}
         />
       )}
-    
-      <Text style={styles.openingText}> -------------------- Welcome to your study room! --------------------</Text>
+
+      <Text style={styles.openingText}>
+        {" "}
+        -------------------- Welcome to your study room! --------------------
+      </Text>
 
       <View style={{ flex: 1 }}>
         <Modal isVisible={isModalVisible}>
@@ -161,9 +164,9 @@ export default function GroupChatScreen({ route, navigation }) {
                 onChangeText={onChangeNumber}
                 value={number}
                 placeholderTextColor={"grey"}
-                placeholder="Minutes"
+                placeholder="Seconds"
               />
-              
+
               <Button
                 title="Let's do it"
                 onPress={() => {
@@ -171,7 +174,6 @@ export default function GroupChatScreen({ route, navigation }) {
                   setModalVisible(false);
                 }}
               />
-
             </View>
           </View>
         </Modal>
@@ -238,9 +240,9 @@ const styles = StyleSheet.create({
   openingText: {
     fontSize: 12,
     textAlign: "center",
-    fontFamily: 'Avenir Next',
-    color: '#9A9B9D',
-    fontWeight: '600',
+    fontFamily: "Avenir Next",
+    color: "#9A9B9D",
+    fontWeight: "600",
   },
   timerInput: {
     width: 90,
@@ -290,9 +292,9 @@ const styles = StyleSheet.create({
     color: "white",
   },
   streakBox: {
-    backgroundColor: "#D3D3D3", 
-    paddingVertical: 8, 
-    paddingHorizontal: 20, 
-    borderRadius: 8
-  }
+    backgroundColor: "#D3D3D3",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
 });
