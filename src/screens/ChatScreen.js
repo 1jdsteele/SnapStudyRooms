@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 // import Ionicons from "react-native-vector-icons/Ionicons";
@@ -32,8 +39,7 @@ export default function ChatScreen({ navigation }) {
       .select("room_id, chat_rooms(name)")
       .eq("user_email", user.email);
 
-    if (error) 
-    {
+    if (error) {
       console.error("Error fetching group chats:", error);
       return;
     }
@@ -46,7 +52,7 @@ export default function ChatScreen({ navigation }) {
     //   .from("room_streaks")
     //   .select("room_id", "current_streak")
     //   .in("room_id", roomIds);
-    // if (streakError) 
+    // if (streakError)
     // {
     //   console.error("Error fetching streak info:", error);
     //   return;
@@ -123,67 +129,70 @@ export default function ChatScreen({ navigation }) {
     >
       <Header title="Chats" />
       <View>
-        {chats?.map((chat) => {
-          return (
-            <TouchableOpacity
-              style={styles.userButton}
-              // onPress={() => {
-              //   navigation.navigate("Conversation", {
-              //     isChatbot: chat.isChatbot,
-              //     chatId: chat.chatId,
-              //   });
-              // }}
-              onPress={() => {
-                if (chat.isChatbot) {
-                  navigation.navigate("Conversation", {
-                    isChatbot: true,
-                    chatId: chat.chatId,
-                  });
-                } else {
-                  navigation.navigate("GroupChat", {
-                    roomName: chat.chatId,
-                  });
-                }
-              }}
-              key={chat.chatId}
-            >
-              {/* <Ionicons
+        <ScrollView>
+          {chats?.map((chat) => {
+            return (
+              <TouchableOpacity
+                style={styles.userButton}
+                // onPress={() => {
+                //   navigation.navigate("Conversation", {
+                //     isChatbot: chat.isChatbot,
+                //     chatId: chat.chatId,
+                //   });
+                // }}
+                onPress={() => {
+                  if (chat.isChatbot) {
+                    navigation.navigate("Conversation", {
+                      isChatbot: true,
+                      chatId: chat.chatId,
+                    });
+                  } else {
+                    navigation.navigate("GroupChat", {
+                      roomName: chat.chatId,
+                    });
+                  }
+                }}
+                key={chat.chatId}
+              >
+                {/* <Ionicons
                 style={styles.userIcon}
                 name="person-outline"
                 size={36}
                 color="lightgrey"
               /> */}
-              <View style={styles.pfpWrapper}>
-                <Image
-                  source={{ uri: "https://sdk.bitmoji.com/render/panel/10212369-104932755325_2-s5-v1.png?transparent=1&palette=1&scale=2",}}
-                  style={styles.profilePicture}
+                <View style={styles.pfpWrapper}>
+                  <Image
+                    source={{
+                      uri: "https://sdk.bitmoji.com/render/panel/10212369-104932755325_2-s5-v1.png?transparent=1&palette=1&scale=2",
+                    }}
+                    style={styles.profilePicture}
+                  />
+                </View>
+                <Text style={styles.userName}> {chat.chatId} </Text>
+                <Ionicons
+                  style={styles.userCamera}
+                  name="camera-outline"
+                  size={24}
+                  color="lightgrey"
                 />
-              </View>
-              <Text style={styles.userName}> {chat.chatId} </Text>
-              <Ionicons
-                style={styles.userCamera}
-                name="camera-outline"
-                size={24}
-                color="lightgrey"
-              />
-            </TouchableOpacity>
-          );
-        })}
-  {/* Since ChatScreen is in UserTab for navigation and we're trying to reach a new study room that lives in UserStack, calling getParent()
+              </TouchableOpacity>
+            );
+          })}
+          {/* Since ChatScreen is in UserTab for navigation and we're trying to reach a new study room that lives in UserStack, calling getParent()
   will navigate to the parent stack screen. */}
-      <View style={styles.circleIconWrap}>
-        <TouchableOpacity style={styles.circleIcon}
-          onPress={() => {
-            const parentNavigation = navigation.getParent();
-            parentNavigation.navigate("NewStudyRoom");
-          }}
-          activeOpacity={0.85}
-        >
-          <Ionicons name="chatbox-outline" size={30} color={"black"}/>
-          
-        </TouchableOpacity>
-      </View>
-      
+          <View style={styles.circleIconWrap}>
+            <TouchableOpacity
+              style={styles.circleIcon}
+              onPress={() => {
+                const parentNavigation = navigation.getParent();
+                parentNavigation.navigate("NewStudyRoom");
+              }}
+              activeOpacity={0.85}
+            >
+              <Ionicons name="chatbox-outline" size={30} color={"black"} />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -204,7 +213,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     overflow: "hidden",
-    position: "absolute", 
+    position: "absolute",
     left: 2,
     top: -4,
   },
@@ -218,9 +227,9 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 50,
     backgroundColor: "yellow",
-    alignItems: "center",     
+    alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#000",     
+    shadowColor: "#000",
     shadowOpacity: 0.25,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 8 },
@@ -246,6 +255,4 @@ const styles = StyleSheet.create({
     right: 15,
     top: 10,
   },
-  
-
 });
